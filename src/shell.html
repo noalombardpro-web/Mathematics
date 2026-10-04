@@ -1,26 +1,44 @@
 <title>Maths Terminale</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&family=Newsreader:ital,wght@0,400;0,500;0,600;1,500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&family=STIX+Two+Text:ital,wght@0,400;0,500;0,600;1,500;1,600&display=swap">
 <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'}};</script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script>
 <style>
 /*STYLE*/
 </style>
 
+<div class="readbar" aria-hidden="true"><i id="readbar"></i></div>
 <div class="topbar"><b>Maths Terminale</b><button class="btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="side">Menu</button></div>
 <div class="app">
   <aside class="side" id="side">
     <a class="brand" href="#accueil"><div class="logo" aria-hidden="true">∑</div><div><b>Maths Terminale</b><span>Fiches de cours</span></div></a>
+    <div class="gprog" aria-live="polite">
+      <div class="row"><span>Progression globale</span><span id="gp-t">0 / 16</span></div>
+      <b id="gp-p">0 %</b>
+      <div class="bar" id="gp-bar"></div>
+    </div>
     <nav class="nav" id="nav" aria-label="Navigation du cours"></nav>
-    <div class="side-foot">2 chapitres pour l'instant</div>
+    <div class="theme"><small>Thème</small>
+      <div class="seg" id="theme" role="group" aria-label="Thème">
+        <button type="button" data-t="light">Clair</button><button type="button" data-t="dark">Sombre</button><button type="button" data-t="auto">Auto</button>
+      </div>
+    </div>
   </aside>
   <div class="main">
     <div class="page">
       <section id="accueil" data-title="Accueil">
         <div class="hero">
-          <h1>Le programme de Terminale, <em>chapitre par chapitre</em></h1>
-          <p>Cours complet, démonstrations dépliables, exemples corrigés, outils interactifs et quiz de fin de chapitre. Cochez les sections que vous avez revues pour suivre votre progression.</p>
+          <div>
+            <span class="eyebrow">Spécialité mathématiques · Terminale</span>
+            <h1>Le programme, <em>démontré</em> chapitre par chapitre</h1>
+            <p>Définitions, théorèmes, démonstrations dépliables, exemples corrigés, outils interactifs et quiz. Marquez chaque section revue pour suivre votre progression.</p>
+          </div>
+          <div class="ring" aria-label="Progression globale">
+            <svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="52"/><circle class="fg" id="ring" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="326.7"/></svg>
+            <div><div><b id="ring-p">0 %</b><span>revu</span></div></div>
+          </div>
         </div>
+        <div class="stats" id="stats"></div>
         <div class="cards" id="cards"></div>
         <div class="soon">Les chapitres suivants seront ajoutés au fur et à mesure.</div>
       </section>

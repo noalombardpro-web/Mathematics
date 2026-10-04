@@ -6,8 +6,8 @@ const store = {
 };
 const typeset = el => { if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise(el ? [el] : undefined).catch(() => {}); };
 const CH = [
-  { id: "ch1", n: 1, color: "#5aa9ff" },
-  { id: "ch2", n: 2, color: "#ffb454" }
+  { id: "ch1", n: 1, cc: "var(--c1)" },
+  { id: "ch2", n: 2, cc: "var(--c2)" }
 ];
 let done = store.get("mt-done", {});
 
@@ -24,19 +24,24 @@ function renderNav(cur) {
   let h = `<small>Menu</small><a href="#accueil" ${cur === "accueil" ? 'aria-current="page"' : ""}>Accueil</a><small style="margin-top:12px">Chapitres</small>`;
   CH.forEach(c => {
     const active = cur === c.id;
-    h += `<a class="ch" href="#${c.id}" ${active ? 'aria-current="page"' : ""}><i>${c.n}</i>${c.title}</a>`;
+    h += `<a class="ch" href="#${c.id}" style="--cc:${c.cc}" ${active ? 'aria-current="page"' : ""}><i>${c.n}</i>${c.title}<span class="pc">${pct(c)} %</span></a>`;
     if (active) h += `<div class="subnav">` + c.secs.map((s, i) =>
       `<a href="#${s.id}" class="${done[s.id] ? "done" : ""}">${i + 1}. ${s.t}<span class="d"></span></a>`).join("") + `</div>`;
   });
   $("#nav").innerHTML = h;
 }
+const nDone = c => c.secs.filter(s => done[s.id]).length;
+const pct = c => Math.round(100 * nDone(c) / c.secs.length);
+const TOTAL = CH.reduce((t, c) => t + c.secs.length, 0);
 function renderCards() {
-  $("#cards").innerHTML = CH.map(c => {
-    const d = c.secs.filter(s => done[s.id]).length, p = Math.round(100 * d / c.secs.length);
-    return `<a class="card" href="#${c.id}" style="--cc:${c.color}"><span class="k">Chapitre ${c.n}</span><h2>${c.title}</h2>
-      <ul>${c.secs.map(s => `<li>${s.t}</li>`).join("")}</ul>
-      <div class="pt"><span>${d} / ${c.secs.length} sections revues</span><span>${p} %</span></div><div class="prog"><i style="width:${p}%"></i></div></a>`;
-  }).join("");
+  $("#cards").innerHTML = CH.map(c => `<a class="card" href="#${c.id}" style="--cc:${c.cc}"><span class="k">Chapitre ${c.n}</span><h2>${c.title}</h2>
+      <ol>${c.secs.map(s => `<li class="${done[s.id] ? "done" : ""}">${s.t}</li>`).join("")}</ol>
+      <div class="pt"><span>${nDone(c)} / ${c.secs.length} sections revues</span><span>${pct(c)} %</span></div><div class="bar"><i style="width:${pct(c)}%"></i></div></a>`).join("");
+  const g = CH.reduce((t, c) => t + nDone(c), 0), gp = Math.round(100 * g / TOTAL);
+  $("#gp-t").textContent = `${g} / ${TOTAL} sections`; $("#gp-p").textContent = gp + " %";
+  $("#gp-bar").innerHTML = CH.map((c, i) => `<i class="b${i + 1}" style="width:${100 * nDone(c) / TOTAL}%"></i>`).join("");
+  $("#ring").style.strokeDashoffset = 326.7 * (1 - g / TOTAL); $("#ring-p").textContent = gp + " %";
+  CH.forEach(c => { const b = $(".cprog", c.el); if (b) { $(".bar i", b).style.width = pct(c) + "%"; $("span", b).textContent = `${nDone(c)} / ${c.secs.length} sections revues`; } });
 }
 function show(token) {
   token = token || "accueil";
@@ -44,14 +49,36 @@ function show(token) {
   const view = chap ? chap.id : "accueil";
   $("#accueil").hidden = view !== "accueil";
   CH.forEach(c => { c.el.hidden = c.id !== view; });
-  document.documentElement.style.setProperty("--ac", chap ? chap.color : "#5aa9ff");
+  document.documentElement.dataset.ch = view;
   document.title = (chap ? chap.title : "Accueil") + " · Maths Terminale";
   renderNav(view); renderCards();
   $("#side").classList.remove("open"); $("#menu-btn").setAttribute("aria-expanded", "false");
   const target = chap && token !== chap.id ? document.getElementById(token) : null;
   if (target) target.scrollIntoView(); else window.scrollTo(0, 0);
   if (view === "ch1") drawGeo();
+  onScroll();
 }
+
+/* ---------- barre de lecture et section courante ---------- */
+function onScroll() {
+  const h = document.documentElement, max = h.scrollHeight - h.clientHeight;
+  $("#readbar").style.width = (max > 0 ? 100 * h.scrollY / max : 0) + "%";
+  let cur = null;
+  $$(".chapter:not([hidden]) .sec").forEach(s => { if (s.getBoundingClientRect().top < 140) cur = s.id; });
+  $$(".subnav a").forEach(a => a.classList.toggle("here", a.getAttribute("href") === "#" + cur));
+}
+window.addEventListener("scroll", onScroll, { passive: true });
+
+/* ---------- thème ---------- */
+function setTheme(t, save) {
+  const r = document.documentElement;
+  if (t === "auto") r.removeAttribute("data-theme"); else r.setAttribute("data-theme", t);
+  $$("#theme button").forEach(b => b.setAttribute("aria-pressed", b.dataset.t === t));
+  if (save) store.set("mt-theme", t);
+  drawGeo();
+}
+$("#theme").addEventListener("click", e => { const b = e.target.closest("[data-t]"); if (b) setTheme(b.dataset.t, true); });
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => drawGeo());
 window.addEventListener("hashchange", () => show(location.hash.slice(1)));
 $("#menu-btn").onclick = () => {
   const o = $("#side").classList.toggle("open"); $("#menu-btn").setAttribute("aria-expanded", o);
@@ -74,7 +101,21 @@ CH.forEach(c => {
   const t = document.createElement("div"); t.className = "tools";
   t.innerHTML = `<button class="btn" type="button" data-a="open">Déplier les démonstrations</button><button class="btn" type="button" data-a="close">Replier</button>`;
   t.onclick = e => { const a = e.target.dataset.a; if (a) $$("details.proof", c.el).forEach(d => d.open = a === "open"); };
-  $(".chead", c.el).appendChild(t);
+  const pr = document.createElement("div"); pr.className = "cprog";
+  pr.innerHTML = `<span></span><div class="bar"><i></i></div>`;
+  $(".chead", c.el).append(pr, t);
+  const LAB = { def: "Définition", thm: "Théorème", ex: "Exemple", warn: "Attention", tip: "Méthode", note: "Remarque" };
+  $$(".sec", c.el).forEach((s, si) => {
+    const cnt = {};
+    $$(".box", s).forEach(b => {
+      const k = Object.keys(LAB).find(k => b.classList.contains(k)); const t2 = b.firstElementChild;
+      if (!k || !t2 || t2.tagName !== "B" || b.classList.contains("proof")) return;
+      cnt[k] = (cnt[k] || 0) + 1;
+      const lab = document.createElement("span"); lab.className = "lab";
+      lab.textContent = ["def", "thm", "ex"].includes(k) ? `${LAB[k]} ${c.n}.${si + 1}.${cnt[k]}` : LAB[k];
+      t2.prepend(lab);
+    });
+  });
 });
 
 /* ---------- explorateur de suite géométrique ---------- */
@@ -225,4 +266,7 @@ $$(".quiz").forEach(box => {
 
 /* ---------- démarrage ---------- */
 comb(); seuil(); parts(); pascal(null);
+setTheme(store.get("mt-theme", "auto"), false);
+$("#stats").innerHTML = [[CH.length, "chapitres"], [TOTAL, "sections"], [$$("details.proof").length, "démonstrations"], [$$(".widget").length + $$(".quiz").length, "outils et quiz"]]
+  .map(([v, l]) => `<div><b>${v}</b><span>${l}</span></div>`).join("");
 show(location.hash.slice(1));
