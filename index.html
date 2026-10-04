@@ -1,0 +1,1148 @@
+<title>Maths Terminale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&family=Newsreader:ital,wght@0,400;0,500;0,600;1,500&display=swap">
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'}};</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script>
+<style>
+/* Layout: menu latéral des chapitres, contenu de cours en colonne unique, outils interactifs intégrés aux sections. Thème sombre assumé. */
+:root{
+  --bg:#0a0d14; --side:#0e121b; --surface:#121824; --surface2:#182030; --line:#222b3e; --line2:#2e3a52;
+  --fg:#e7eaf3; --muted:#9099b0; --faint:#5d6781;
+  --c1:#5aa9ff; --c2:#ffb454; --ac:#5aa9ff;
+  --def:#6aa6ff; --thm:#c3a0ff; --ex:#4cd9a0; --warn:#ff8f7e; --tip:#ffd166;
+  --ui:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+html,body{height:auto}
+body{background:var(--bg);color:var(--fg);font:400 16px/1.65 var(--ui)}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+code{font-family:var(--mono);font-size:.9em;background:var(--surface2);padding:1px 5px;border-radius:4px}
+mjx-container{color:var(--fg)}
+mjx-container[display="true"]{overflow-x:auto;overflow-y:hidden;padding:2px 0;margin:.7em 0 !important}
+
+.app{display:grid;grid-template-columns:272px minmax(0,1fr);min-height:100vh}
+.side{background:var(--side);border-right:1px solid var(--line);padding:22px 14px;display:flex;flex-direction:column;gap:22px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand{display:flex;align-items:center;gap:11px;padding:0 8px;text-decoration:none;color:inherit}
+.logo{width:36px;height:36px;border-radius:9px;background:var(--surface2);border:1px solid var(--line2);display:grid;place-items:center;font:600 20px var(--serif);font-style:italic;color:var(--c1)}
+.brand b{display:block;font:600 16px var(--serif);letter-spacing:.01em;line-height:1.2}
+.brand span{display:block;font-size:11px;color:var(--muted);letter-spacing:.04em}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav small{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);padding:0 10px 6px}
+.nav a{display:flex;align-items:center;gap:10px;color:var(--muted);text-decoration:none;border-radius:7px;padding:8px 10px;font-weight:500;font-size:14px}
+.nav a:hover{background:var(--surface);color:var(--fg)}
+.nav a[aria-current="page"]{background:var(--surface2);color:var(--fg);box-shadow:inset 2px 0 0 var(--ac)}
+.nav .ch{margin-top:6px}
+.nav .ch i{font:600 11px var(--mono);font-style:normal;background:var(--line);color:var(--muted);border-radius:5px;padding:1px 6px}
+.subnav{display:flex;flex-direction:column;gap:1px;margin:2px 0 6px 18px;padding-left:10px;border-left:1px solid var(--line)}
+.subnav a{font-size:13px;padding:5px 8px;font-weight:400}
+.subnav a .d{margin-left:auto;width:7px;height:7px;border-radius:50%;border:1px solid var(--faint)}
+.subnav a.done .d{background:var(--ex);border-color:var(--ex)}
+.side-foot{margin-top:auto;padding:0 10px;font-size:12px;color:var(--faint)}
+
+.topbar{display:none}
+.main{min-width:0}
+.page{max-width:860px;margin:0 auto;padding:36px 28px 80px}
+[hidden]{display:none !important}
+
+/* accueil */
+.hero{padding:12px 0 28px}
+.hero h1{font:500 clamp(34px,6vw,54px)/1.08 var(--serif);margin:0 0 14px;letter-spacing:-.01em;text-wrap:balance}
+.hero h1 em{color:var(--c1);font-style:italic}
+.hero p{color:var(--muted);max-width:56ch;margin:0;font-size:17px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:8px}
+.card{display:flex;flex-direction:column;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px;text-decoration:none;color:inherit;min-width:0}
+.card:hover{border-color:var(--line2);background:var(--surface2)}
+.card .k{font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--cc)}
+.card h2{margin:0;font:500 26px/1.2 var(--serif)}
+.card ul{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+.card li{font-size:12px;color:var(--muted);border:1px solid var(--line2);border-radius:99px;padding:2px 10px}
+.prog{height:5px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:auto}
+.prog i{display:block;height:100%;background:var(--cc);width:0;transition:width .3s}
+.card .pt{font-size:12px;color:var(--muted);display:flex;justify-content:space-between}
+.soon{margin-top:22px;border:1px dashed var(--line2);border-radius:12px;padding:16px 20px;color:var(--faint);font-size:14px}
+
+/* chapitre */
+.chead{padding:6px 0 18px;border-bottom:1px solid var(--line);margin-bottom:8px}
+.kicker{font:600 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ac)}
+.chead h1{font:500 clamp(32px,5.5vw,48px)/1.1 var(--serif);margin:8px 0 12px;letter-spacing:-.01em;text-wrap:balance}
+.lede{color:var(--muted);margin:0;max-width:62ch;font-size:17px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:7px 13px;border-radius:7px;border:1px solid var(--line2);background:var(--surface2);font-size:13px;font-weight:500}
+.btn:hover{border-color:var(--faint)}
+.sec{padding:30px 0 6px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:16px;padding-bottom:30px}
+.sec:last-of-type{border-bottom:0}
+.sec h2{margin:0;font:500 27px/1.25 var(--serif);display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;text-wrap:balance}
+.sec .no{font:600 13px var(--mono);color:var(--ac);border:1px solid var(--ac);border-radius:6px;padding:1px 8px;position:relative;top:-3px}
+.done-btn{margin-left:auto;font:500 12px var(--ui);display:inline-flex;gap:7px;align-items:center;color:var(--muted);background:none;border:1px solid var(--line2);border-radius:99px;padding:3px 11px}
+.done-btn[aria-pressed="true"]{color:var(--ex);border-color:var(--ex)}
+.sec p{margin:0}
+.small{font-size:14px;color:var(--muted)}
+.box{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--bc,var(--line2));border-radius:8px;padding:14px 18px;display:flex;flex-direction:column;gap:9px;min-width:0}
+.box>b:first-child,.box>summary{font:600 13px var(--ui);letter-spacing:.02em;color:var(--bc,var(--fg))}
+.box ul,.box ol{margin:0;padding-left:1.25em;display:flex;flex-direction:column;gap:5px}
+.def{--bc:var(--def)} .thm{--bc:var(--thm)} .ex{--bc:var(--ex)} .warn{--bc:var(--warn)} .tip{--bc:var(--tip)} .note{--bc:var(--muted)}
+.tag{display:inline-block;align-self:flex-start;font:500 11px var(--ui);color:var(--thm);border:1px solid var(--thm);border-radius:99px;padding:0 9px;margin-left:8px}
+.proof{--bc:var(--faint);border-style:dashed;border-left-style:solid;background:transparent}
+.proof>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;color:var(--muted)}
+.proof>summary::before{content:"";width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .15s}
+.proof[open]>summary::before{transform:rotate(45deg)}
+.proof[open]{background:var(--surface)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.flow{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px;counter-reset:f}
+.flow li{counter-increment:f;display:flex;align-items:center;gap:8px;font-size:14px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:7px 12px}
+.flow li::before{content:counter(f);font:600 11px var(--mono);color:#06101f;background:var(--ac);border-radius:50%;width:20px;height:20px;display:grid;place-items:center;flex:none}
+.flow.inline{padding:0}
+.tw{overflow-x:auto}
+table.lim{border-collapse:collapse;min-width:100%;font-size:14px}
+table.lim th,table.lim td{border:1px solid var(--line2);padding:7px 11px;text-align:center;white-space:nowrap}
+table.lim th{background:var(--surface2);font-weight:600;text-align:left}
+table.lim td.fi{color:var(--warn);font-weight:600}
+pre{margin:0;overflow-x:auto;background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:12px 14px;font:500 13.5px/1.6 var(--mono)}
+pre code{background:none;padding:0;font-size:inherit}
+.fig{margin:0;display:flex;flex-direction:column;gap:6px;align-items:center}
+.fig svg{width:100%;max-width:460px;height:auto;background:var(--surface);border:1px solid var(--line);border-radius:8px}
+.fig figcaption{font-size:13px;color:var(--muted);text-align:center;max-width:52ch}
+.ax{stroke:var(--faint);stroke-width:1.5}
+.thr{stroke:var(--c1);stroke-width:1.5;stroke-dasharray:5 5}
+.lb2{fill:var(--muted);font:12px var(--ui)} .lb2.a{fill:var(--c1);font-weight:600} .lb2.b{fill:var(--c2);font-weight:600}
+.pts circle{fill:var(--muted)} .pts circle.ok{fill:var(--ex)}
+.band{fill:var(--c1);opacity:.15}
+.vbox{fill:none;stroke:var(--line2)}
+.va{fill:var(--c1);fill-opacity:.2;stroke:var(--c1);stroke-width:1.5}
+.vb{fill:var(--c2);fill-opacity:.2;stroke:var(--c2);stroke-width:1.5}
+.vt{fill:var(--fg);font:600 14px var(--mono);text-anchor:middle} .vt.a{fill:var(--c1)}
+.tr line{stroke:var(--faint);stroke-width:1.5}
+.perm{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:4px}
+.perm>div{border:1px solid var(--line2);border-radius:8px;padding:8px 14px;font:500 14px var(--mono);display:flex;flex-direction:column}
+.perm small{font:400 11px var(--ui);color:var(--muted)}
+.perm span{color:var(--faint)}
+
+/* arbre de décision */
+.decision{display:flex;flex-direction:column;gap:12px;align-items:stretch;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.dq{background:var(--surface2);border:1px solid var(--line2);border-radius:8px;padding:9px 14px;text-align:center;font-weight:500}
+.dcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.dcol{display:flex;flex-direction:column;gap:10px;min-width:0;border-top:2px solid var(--line2);padding-top:8px}
+.dl{font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ac)}
+.dr{background:var(--bg);border:1px solid var(--ac);border-radius:8px;padding:10px 12px;text-align:center;display:flex;flex-direction:column;gap:3px}
+.dr small{font-size:12px;color:var(--muted)}
+.dn{font-size:13px;color:var(--muted);text-align:center}
+
+/* outils interactifs */
+.widget{background:var(--surface);border:1px solid var(--ac);border-radius:10px;overflow:hidden}
+.whead{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline;padding:11px 16px;background:var(--surface2);border-bottom:1px solid var(--line);font-size:14px}
+.whead span{color:var(--muted);font-size:13px}
+.whead::before{content:"Outil";font:600 10px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#06101f;background:var(--ac);border-radius:4px;padding:1px 6px;align-self:center}
+.wbody{padding:16px;display:flex;flex-direction:column;gap:14px}
+.ctrl{display:flex;flex-wrap:wrap;gap:12px 22px}
+.ctrl label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted);min-width:0}
+.ctrl output{font:600 13px var(--mono);color:var(--fg);margin-left:6px}
+.ctrl input[type=number],.ctrl select{width:110px;background:var(--bg);border:1px solid var(--line2);border-radius:6px;padding:6px 9px;font:500 15px var(--mono)}
+.ctrl input[type=range]{width:210px;max-width:100%;accent-color:var(--ac)}
+canvas{width:100%;height:auto;background:var(--bg);border:1px solid var(--line);border-radius:8px;display:block}
+.verdict{font-size:15px;margin:0}
+.verdict b{color:var(--ac)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{font:500 13px var(--mono);background:var(--bg);border:1px solid var(--line2);border-radius:6px;padding:2px 9px}
+.results{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.res{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;min-width:0}
+.res span{display:block;font-size:12px;color:var(--muted)}
+.res b{font:600 17px var(--mono);overflow-wrap:anywhere;color:var(--fg)}
+.pascal{display:flex;flex-direction:column;gap:4px;align-items:center;overflow-x:auto;padding-bottom:4px}
+.prow{display:flex;gap:4px;align-items:center}
+.prow button{min-width:42px;height:34px;padding:0 6px;border:1px solid var(--line2);background:var(--bg);border-radius:6px;font:500 13px var(--mono);color:var(--fg)}
+.prow button:hover{border-color:var(--faint)}
+.prow button.p{background:color-mix(in srgb,var(--ac) 30%,var(--bg));border-color:var(--ac)}
+.prow button.s{background:var(--ac);color:#06101f;border-color:var(--ac);font-weight:600}
+.prow em{font:500 11px var(--mono);font-style:normal;color:var(--faint);margin-left:8px;white-space:nowrap}
+
+/* quiz */
+.quiz{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:18px;margin-top:10px}
+.quiz h3{margin:0;font:500 24px var(--serif)}
+.qq{display:flex;flex-direction:column;gap:9px;padding-top:14px;border-top:1px solid var(--line)}
+.qq:first-of-type{border-top:0;padding-top:0}
+.qq p{margin:0;font-weight:500}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}
+.opt{text-align:left;background:var(--bg);border:1px solid var(--line2);border-radius:8px;padding:9px 12px;min-width:0}
+.opt:hover:not(:disabled){border-color:var(--faint)}
+.opt.good{border-color:var(--ex);background:color-mix(in srgb,var(--ex) 15%,var(--bg))}
+.opt.bad{border-color:var(--warn);background:color-mix(in srgb,var(--warn) 15%,var(--bg))}
+.why{font-size:14px;color:var(--muted);margin:0}
+.score{font:600 14px var(--mono);color:var(--ac)}
+
+@media (max-width:900px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:20;background:var(--side);border-bottom:1px solid var(--line);padding:10px 16px}
+  .topbar b{font:600 16px var(--serif)}
+  .side{display:none;position:fixed;inset:0;top:53px;height:auto;z-index:19;border-right:0}
+  .side.open{display:flex}
+  html{scroll-padding-top:70px}
+  .page{padding:24px 16px 64px}
+  .sec h2{font-size:23px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.prog i{transition:none}}
+
+</style>
+
+<div class="topbar"><b>Maths Terminale</b><button class="btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="side">Menu</button></div>
+<div class="app">
+  <aside class="side" id="side">
+    <a class="brand" href="#accueil"><div class="logo" aria-hidden="true">∑</div><div><b>Maths Terminale</b><span>Fiches de cours</span></div></a>
+    <nav class="nav" id="nav" aria-label="Navigation du cours"></nav>
+    <div class="side-foot">2 chapitres pour l'instant</div>
+  </aside>
+  <div class="main">
+    <div class="page">
+      <section id="accueil" data-title="Accueil">
+        <div class="hero">
+          <h1>Le programme de Terminale, <em>chapitre par chapitre</em></h1>
+          <p>Cours complet, démonstrations dépliables, exemples corrigés, outils interactifs et quiz de fin de chapitre. Cochez les sections que vous avez revues pour suivre votre progression.</p>
+        </div>
+        <div class="cards" id="cards"></div>
+        <div class="soon">Les chapitres suivants seront ajoutés au fur et à mesure.</div>
+      </section>
+<article class="chapter" id="ch1" hidden data-title="Suites numériques">
+<header class="chead">
+  <span class="kicker">Chapitre 1</span>
+  <h1>Suites numériques</h1>
+  <p class="lede">Récurrence, limites finies et infinies, opérations sur les limites, formes indéterminées et suites géométriques. Les exemples du cours sont repris et les rectifications de l'annexe intégrées.</p>
+</header>
+
+<section class="sec" id="ch1-1" data-t="Bases et récurrence">
+  <h2><span class="no">1</span>Bases et récurrence</h2>
+  <div class="box note"><b>Vocabulaire</b>
+    <p>Une suite réelle associe à chaque entier \(n\) de son domaine un réel \(u_n\). \(n\) est le <i>rang</i>, \(u_n\) le <i>terme</i>. \((u_n)\) désigne la suite, pas un nombre. <i>Forme explicite</i> : \(u_n=f(n)\). <i>Forme récurrente</i> : terme initial + règle donnant le suivant, par exemple \(u_{n+1}=f(u_n)\).</p>
+    <p class="small">Attention au départ : \(1/n\), \(1/\sqrt n\), \(1/n^2\) sont définis pour \(n\ge 1\).</p>
+  </div>
+  <div class="two">
+    <div class="box"><b>Monotonie</b>
+      <ul>
+        <li>Croissante : \(\forall n,\ u_{n+1}\ge u_n\).</li>
+        <li>Décroissante : \(\forall n,\ u_{n+1}\le u_n\).</li>
+        <li>Strictement croissante / décroissante : remplacer par \(\gt\) / \(\lt\).</li>
+        <li>Monotone : croissante ou décroissante.</li>
+      </ul>
+    </div>
+    <div class="box"><b>Bornes</b>
+      <ul>
+        <li>Majorée : \(\exists M\in\mathbb R,\ \forall n,\ u_n\le M\).</li>
+        <li>Minorée : \(\exists m\in\mathbb R,\ \forall n,\ u_n\ge m\).</li>
+        <li>Bornée : minorée et majorée.</li>
+        <li>Non majorée : \(\forall A\in\mathbb R,\ \exists n,\ u_n\gt A\). Non minorée : \(\forall A,\ \exists n,\ u_n\lt A\).</li>
+      </ul>
+    </div>
+  </div>
+  <div class="box def"><b>Principe du raisonnement par récurrence</b>
+    <p>Une propriété \(P(n)\) est <i>héréditaire</i> à partir de \(n_0\) si, pour tout entier \(k\ge n_0\), \(P(k)\Rightarrow P(k+1)\).</p>
+    \[ P(n_0)\ \text{vraie}\quad\text{et}\quad \forall k\ge n_0,\ P(k)\Rightarrow P(k+1) \]
+    <p>Alors \(\forall n\ge n_0,\ P(n)\) est vraie. Rédaction en trois étapes : <b>initialisation, hérédité, conclusion</b>.</p>
+  </div>
+  <ol class="flow"><li>Vérifier \(P(n_0)\)</li><li>Fixer \(k\ge n_0\), supposer \(P(k)\)</li><li>Démontrer \(P(k+1)\)</li><li>Conclure pour tout \(n\ge n_0\)</li></ol>
+  <div class="box ex"><b>Exemple du cours : établir une formule explicite</b>
+    <p>Soit \(u_0=1\) et \(u_{n+1}=u_n+2n+3\). Montrons \(u_n=(n+1)^2\) pour tout \(n\in\mathbb N\).</p>
+    <p><i>Initialisation.</i> \(u_0=1=(0+1)^2\) : \(P(0)\) est vraie.</p>
+    <p><i>Hérédité.</i> Fixons \(k\in\mathbb N\) et supposons \(u_k=(k+1)^2\). Alors
+    \[ u_{k+1}=u_k+2k+3=(k+1)^2+2k+3=k^2+4k+4=(k+2)^2. \]
+    C'est exactement \(P(k+1)\) : \(u_{k+1}=((k+1)+1)^2\).</p>
+    <p><i>Conclusion.</i> La propriété est initialisée au rang 0 et héréditaire. Par récurrence, \(u_n=(n+1)^2\) pour tout \(n\in\mathbb N\).</p>
+  </div>
+  <div class="box warn"><b>À ne pas faire</b>
+    <p>Une conjecture obtenue en calculant quelques termes n'est pas une preuve. Dans l'hérédité, \(k\) est quelconque : on suppose seulement \(P(k)\) et on prouve \(P(k+1)\).</p>
+  </div>
+</section>
+
+<section class="sec" id="ch1-2" data-t="Bernoulli et monotonie">
+  <h2><span class="no">2</span>Les démonstrations par récurrence</h2>
+  <div class="box thm"><b>Inégalité de Bernoulli</b> <span class="tag">démonstration au programme</span>
+    <p>Pour tout réel \(a\gt0\) et tout entier naturel \(n\) :  \[ (1+a)^n\ \ge\ 1+na. \]</p>
+  </div>
+  <details class="box proof"><summary>Démonstration</summary>
+    <p><i>Initialisation.</i> Au rang 0, \((1+a)^0=1=1+0\cdot a\).</p>
+    <p><i>Hérédité.</i> Fixons \(k\in\mathbb N\) et supposons \((1+a)^k\ge 1+ka\). Comme \(1+a\gt0\), multiplier par \(1+a\) conserve le sens de l'inégalité :
+    \[\begin{aligned}(1+a)^{k+1}&=(1+a)(1+a)^k\\&\ge(1+a)(1+ka)\\&=1+(k+1)a+ka^2\\&\ge1+(k+1)a,\quad\text{car }ka^2\ge0.\end{aligned}\]
+    La propriété est donc vraie au rang \(k+1\).</p>
+    <p><i>Conclusion.</i> Par récurrence, \((1+a)^n\ge1+na\) pour tout \(n\in\mathbb N\).</p>
+    <p class="small">Utilité : minorer une puissance par une expression affine ; cette inégalité permet de démontrer que \(q^n\to+\infty\) si \(q\gt1\).</p>
+  </details>
+  <div class="box ex"><b>Exemple du cours : prouver la croissance d'une suite</b>
+    <p>Soit \(u_0=2\) et \(u_{n+1}=\tfrac13u_n+2\). On pose \(P(n):\ u_n\le u_{n+1}\).</p>
+    <p><i>Initialisation.</i> \(u_1=\tfrac13\times2+2=\tfrac83\) ; ainsi \(u_0=2\le\tfrac83=u_1\).</p>
+    <p><i>Hérédité.</i> Fixons \(k\in\mathbb N\) et supposons \(u_k\le u_{k+1}\). Comme \(\tfrac13\gt0\) :
+    \[ u_k\le u_{k+1}\ \Rightarrow\ \tfrac13u_k\le\tfrac13u_{k+1}\ \Rightarrow\ \tfrac13u_k+2\le\tfrac13u_{k+1}+2. \]
+    En utilisant la définition de la suite, on obtient \(u_{k+1}\le u_{k+2}\) : c'est \(P(k+1)\).</p>
+    <p><i>Conclusion.</i> Par récurrence, \(u_n\le u_{n+1}\) pour tout \(n\in\mathbb N\). La suite est donc croissante.</p>
+  </div>
+  <div class="box warn"><b>Pourquoi l'initialisation est indispensable</b>
+    <p>La propriété « \(2^n\) est divisible par 3 » est héréditaire : si \(2^k=3p\), alors \(2^{k+1}=6p=3(2p)\). Pourtant \(2^0=1\) n'est pas divisible par 3, et aucun \(2^n\) ne l'est. Une implication héréditaire ne suffit donc pas.</p>
+  </div>
+  <div class="box tip"><b>Choisir la bonne propriété \(P(n)\)</b>
+    <ul>
+      <li><b>Formule</b> : \(P(n):\ u_n=\) expression en \(n\).</li>
+      <li><b>Borne</b> : \(P(n):\ u_n\le M\) ou \(m\le u_n\le M\).</li>
+      <li><b>Croissance</b> : \(P(n):\ u_n\le u_{n+1}\) ; au rang suivant, viser \(u_{k+1}\le u_{k+2}\).</li>
+      <li><b>Divisibilité</b> : écrire l'hypothèse sous la forme \(u_k=dp\), avec \(p\in\mathbb Z\).</li>
+    </ul>
+    <p class="small">Vérifier les signes avant de multiplier une inégalité : si le facteur est négatif, le sens s'inverse. Remplacer chaque indice correctement : \((n+1)^2\) devient \((k+2)^2\) au rang \(k+1\).</p>
+  </div>
+</section>
+
+<section class="sec" id="ch1-3" data-t="Limites infinies">
+  <h2><span class="no">3</span>Limites infinies</h2>
+  <div class="box def"><b>Définitions : dépasser durablement n'importe quel seuil</b>
+    \[ u_n\to+\infty\iff\forall A\in\mathbb R,\ \exists N\in\mathbb N,\ \forall n\ge N,\ u_n\gt A \]
+    \[ u_n\to-\infty\iff\forall A\in\mathbb R,\ \exists N\in\mathbb N,\ \forall n\ge N,\ u_n\lt A \]
+    <p class="small">Les formulations \(u_n\ge A\) et \(u_n\le A\) sont équivalentes, car le seuil \(A\) est arbitraire. Il faut que <b>tous</b> les termes suivants vérifient l'inégalité.</p>
+  </div>
+  <figure class="fig">
+    <svg viewBox="0 0 420 200" role="img" aria-label="Suite croissante qui dépasse le seuil A à partir du rang N">
+      <line class="ax" x1="40" y1="170" x2="410" y2="170"/><line class="ax" x1="40" y1="170" x2="40" y2="10"/>
+      <text class="lb2" x="396" y="188">n</text><text class="lb2" x="14" y="20">u<tspan dy="4" font-size="10">n</tspan></text>
+      <line class="thr" x1="40" y1="70" x2="410" y2="70"/><text class="lb2 a" x="16" y="74">A</text>
+      <line class="thr" x1="200" y1="70" x2="200" y2="170"/><text class="lb2 a" x="194" y="188">N</text>
+      <g class="pts"><circle cx="60" cy="150" r="3.5"/><circle cx="90" cy="142" r="3.5"/><circle cx="120" cy="132" r="3.5"/><circle cx="150" cy="118" r="3.5"/><circle cx="180" cy="98" r="3.5"/><circle cx="210" cy="62" r="3.5" class="ok"/><circle cx="240" cy="48" r="3.5" class="ok"/><circle cx="270" cy="38" r="3.5" class="ok"/><circle cx="300" cy="30" r="3.5" class="ok"/><circle cx="330" cy="24" r="3.5" class="ok"/><circle cx="360" cy="19" r="3.5" class="ok"/></g>
+    </svg>
+    <figcaption>À partir du rang \(N\), tous les termes restent au-dessus du seuil \(A\). \(N\) dépend de \(A\).</figcaption>
+  </figure>
+  <div class="box note"><b>Comprendre le rang</b>
+    <p>\(N\) (ou \(n_0\)) dépend du seuil \(A\). Il doit être entier et dans le domaine de la suite. Un rang qui convient suffit ; le plus petit n'est demandé que dans certaines questions. <i>Non majorée</i> signifie : un terme dépasse chaque seuil. <i>Tendre vers \(+\infty\)</i> signifie : tous les termes dépassent ensuite le seuil.</p>
+  </div>
+  <div class="box thm"><b>Limites de référence</b>
+    \[ n\to+\infty,\quad \sqrt n\to+\infty,\quad n^2\to+\infty,\quad n^p\to+\infty\ (p\in\mathbb N^*). \]
+    <p class="small">Le cas \(n^p\) est admis dans le cours.</p>
+  </div>
+  <details class="box proof"><summary>Preuves par seuil</summary>
+    <p>Soit \(A\in\mathbb R\) (inégalités larges, comme dans le cours). \(\lceil x\rceil\) est le plus petit entier supérieur ou égal à \(x\).</p>
+    <ul>
+      <li>Pour \(n\) : choisir \(N=\max(0,\lceil A\rceil)\). Si \(n\ge N\), alors \(n\ge A\).</li>
+      <li>Pour \(\sqrt n\) : si \(A\gt0\), choisir \(N=\lceil A^2\rceil\) ; alors \(n\ge N\Rightarrow\sqrt n\ge A\). Si \(A\le0\), \(N=0\) convient.</li>
+      <li>Pour \(n^2\) : si \(A\gt0\), choisir \(N=\lceil\sqrt A\,\rceil\) ; alors \(n\ge N\Rightarrow n^2\ge A\). Si \(A\le0\), \(N=0\) convient.</li>
+    </ul>
+  </details>
+  <div class="box thm"><b>Suite croissante et non majorée</b> <span class="tag">démonstration au programme</span>
+    \[ \text{croissante et non majorée}\ \Rightarrow\ u_n\to+\infty. \]
+  </div>
+  <details class="box proof"><summary>Démonstration</summary>
+    <p>Soit \(A\in\mathbb R\). Puisque la suite n'est pas majorée, il existe \(N\in\mathbb N\) tel que \(u_N\gt A\). Puisqu'elle est croissante, pour tout \(n\ge N\) : \(u_n\ge u_N\gt A\). C'est la définition de \(u_n\to+\infty\).</p>
+    <p>Analogue : si la suite est décroissante et non minorée, choisir \(u_N\lt A\) ; pour \(n\ge N\), \(u_n\le u_N\lt A\). Donc \(u_n\to-\infty\).</p>
+  </details>
+  <div class="box ex"><b>Exemple du cours : \(u_n=-3n-6\to-\infty\)</b>
+    <p>Soit \(A\in\mathbb R\). \(-3n-6\le A\iff n\ge-\tfrac A3-2\). Choisir \(N=\max\!\left(0,\,-\tfrac A3-2\right)\) (arrondi à l'entier supérieur). Alors, pour tout \(n\ge N\), \(u_n\le A\), donc \(u_n\to-\infty\).</p>
+  </div>
+  <div class="box warn"><b>Attention</b>
+    <p>La monotonie seule ne suffit pas : une suite constante est croissante sans tendre vers \(+\infty\). « Non majorée » seule ne garantit pas une limite : il faut les deux hypothèses.</p>
+  </div>
+</section>
+
+<section class="sec" id="ch1-4" data-t="Limites finies et convergence">
+  <h2><span class="no">4</span>Limites finies et convergence</h2>
+  <div class="box def"><b>Définition : se rapprocher durablement d'un réel \(\ell\)</b>
+    <p>\(u_n\) tend vers \(\ell\in\mathbb R\) si tout intervalle ouvert contenant \(\ell\) contient tous les termes à partir d'un certain rang. De façon équivalente :</p>
+    \[ \forall\varepsilon\gt0,\ \exists N\in\mathbb N,\ \forall n\ge N,\ |u_n-\ell|\lt\varepsilon. \]
+    \[ |u_n-\ell|\lt\varepsilon\iff\ell-\varepsilon\lt u_n\lt\ell+\varepsilon. \]
+    <p class="small">Notation : \(\lim_{n\to+\infty}u_n=\ell\) ou \(u_n\to\ell\). Aussi petite que soit la précision \(\varepsilon\), les termes restent ensuite dans la bande.</p>
+  </div>
+  <figure class="fig">
+    <svg viewBox="0 0 420 200" role="img" aria-label="Suite qui converge vers l, dans la bande l moins epsilon, l plus epsilon à partir du rang N">
+      <rect class="band" x="40" y="80" width="370" height="40"/>
+      <line class="ax" x1="40" y1="170" x2="410" y2="170"/><line class="ax" x1="40" y1="170" x2="40" y2="10"/>
+      <line class="thr" x1="40" y1="100" x2="410" y2="100"/>
+      <text class="lb2 a" x="12" y="104">ℓ</text><text class="lb2" x="2" y="84">ℓ+ε</text><text class="lb2" x="2" y="124">ℓ−ε</text>
+      <line class="thr" x1="190" y1="100" x2="190" y2="170"/><text class="lb2 a" x="184" y="188">N</text><text class="lb2" x="396" y="188">n</text>
+      <g class="pts"><circle cx="60" cy="30" r="3.5"/><circle cx="90" cy="150" r="3.5"/><circle cx="120" cy="48" r="3.5"/><circle cx="150" cy="130" r="3.5"/><circle cx="180" cy="70" r="3.5"/><circle cx="210" cy="112" r="3.5" class="ok"/><circle cx="240" cy="92" r="3.5" class="ok"/><circle cx="270" cy="106" r="3.5" class="ok"/><circle cx="300" cy="96" r="3.5" class="ok"/><circle cx="330" cy="103" r="3.5" class="ok"/><circle cx="360" cy="99" r="3.5" class="ok"/></g>
+    </svg>
+    <figcaption>À partir du rang \(N\), tous les termes sont dans la bande \(]\ell-\varepsilon,\ell+\varepsilon[\).</figcaption>
+  </figure>
+  <div class="two">
+    <div class="box"><b>Convergence et divergence</b>
+      <p><i>Convergente</i> : admet une limite finie. <i>Divergente</i> : n'admet pas de limite finie ; elle peut tendre vers \(+\infty\), vers \(-\infty\), ou n'avoir aucune limite.</p>
+      <p class="small">La limite est unique. Converger n'impose ni monotonie ni égalité avec la limite.</p>
+    </div>
+    <div class="box thm"><b>Limites de référence</b>
+      \[ c\to c\ (c\in\mathbb R),\quad \tfrac1n\to0,\quad \tfrac1{\sqrt n}\to0,\quad \tfrac1{n^2}\to0,\quad \tfrac1{n^p}\to0\ (p\ge1). \]
+      <p class="small">Les suites contenant un dénominateur \(n\) sont définies pour \(n\ge1\) ; la suite constante et \(1/n^p\) sont admis à ce stade.</p>
+    </div>
+  </div>
+  <details class="box proof"><summary>Démonstration des trois limites de référence</summary>
+    <p>Fixons \(\varepsilon\gt0\). Pour \(n\ge1\), les termes sont positifs :</p>
+    \[ \left|\tfrac1n-0\right|\lt\varepsilon\iff n\gt\tfrac1\varepsilon,\qquad N=\left\lfloor\tfrac1\varepsilon\right\rfloor+1. \]
+    \[ \left|\tfrac1{\sqrt n}-0\right|\lt\varepsilon\iff n\gt\tfrac1{\varepsilon^2},\qquad N=\left\lfloor\tfrac1{\varepsilon^2}\right\rfloor+1. \]
+    \[ \left|\tfrac1{n^2}-0\right|\lt\varepsilon\iff n\gt\tfrac1{\sqrt\varepsilon},\qquad N=\left\lfloor\tfrac1{\sqrt\varepsilon}\right\rfloor+1. \]
+    <p>Dans chaque cas, \(N\ge1\) et tout \(n\ge N\) vérifie l'inégalité. Cela démontre la limite 0. (\(\lfloor x\rfloor\) est le plus grand entier inférieur ou égal à \(x\).)</p>
+  </details>
+  <div class="box ex"><b>Exemple du cours : \(w_n=5+\tfrac1n\to5\)</b>
+    <p>Soit \(\varepsilon\gt0\). \(|w_n-5|=\tfrac1n\lt\varepsilon\iff n\gt1/\varepsilon\). Choisir \(N=\lfloor1/\varepsilon\rfloor+1\). Pour tout \(n\ge N\), \(5-\varepsilon\lt w_n\lt5+\varepsilon\). Donc \(w_n\to5\).</p>
+    <p>De même, \(1+1/n^2\to1\) avec le rang obtenu pour \(1/n^2\).</p>
+  </div>
+  <div class="box warn"><b>Ce qu'il faut avoir fait pour prouver une limite</b>
+    <p>Pour une précision arbitraire, construire un rang après lequel <b>tous</b> les termes conviennent. Un seul \(\varepsilon\) ou quelques termes ne suffisent pas. Exemple divergent sans limite infinie : \((-1)^n\) alterne entre \(1\) et \(-1\).</p>
+  </div>
+</section>
+
+<section class="sec" id="ch1-5" data-t="Opérations sur les limites">
+  <h2><span class="no">5</span>Opérations sur les limites</h2>
+  <p class="small">Limites prises lorsque \(n\to+\infty\). \(\ell\) et \(\ell'\) sont des réels. <b>F.I.</b> signifie forme indéterminée : ces seules informations ne permettent pas de conclure.</p>
+  <div class="box thm"><b>Somme et différence</b>
+    \[ u_n\to\ell,\ v_n\to\ell'\ \Rightarrow\ u_n+v_n\to\ell+\ell'\qquad u_n-v_n=u_n+(-v_n). \]
+    <div class="tw"><table class="lim"><tr><th>\(\lim u_n\)</th><td>\(\ell\)</td><td>\(\ell\)</td><td>\(+\infty\)</td><td>\(-\infty\)</td><td>\(+\infty\)</td></tr>
+    <tr><th>\(\lim v_n\)</th><td>\(+\infty\)</td><td>\(-\infty\)</td><td>\(+\infty\)</td><td>\(-\infty\)</td><td>\(-\infty\)</td></tr>
+    <tr><th>\(\lim(u_n+v_n)\)</th><td>\(+\infty\)</td><td>\(-\infty\)</td><td>\(+\infty\)</td><td>\(-\infty\)</td><td class="fi">F.I.</td></tr></table></div>
+    <p class="small">Exemple : \(n^2\to+\infty\) et \(n\to+\infty\), donc \(n^2+n\to+\infty\).</p>
+  </div>
+  <div class="box thm"><b>Produit : appliquer la règle des signes</b>
+    \[ u_n\to\ell,\ v_n\to\ell'\ \Rightarrow\ u_nv_n\to\ell\ell'. \]
+    <div class="tw"><table class="lim"><tr><th>\(\lim u_n\)</th><td>\(\ell\gt0\)</td><td>\(\ell\lt0\)</td><td>\(\ell\gt0\)</td><td>\(\ell\lt0\)</td><td>\(+\infty\)</td><td>\(-\infty\)</td><td>\(+\infty\)</td><td>\(0\)</td></tr>
+    <tr><th>\(\lim v_n\)</th><td>\(+\infty\)</td><td>\(+\infty\)</td><td>\(-\infty\)</td><td>\(-\infty\)</td><td>\(+\infty\)</td><td>\(-\infty\)</td><td>\(-\infty\)</td><td>\(\pm\infty\)</td></tr>
+    <tr><th>\(\lim(u_nv_n)\)</th><td>\(+\infty\)</td><td>\(-\infty\)</td><td>\(-\infty\)</td><td>\(+\infty\)</td><td>\(+\infty\)</td><td>\(+\infty\)</td><td>\(-\infty\)</td><td class="fi">F.I.</td></tr></table></div>
+    <p class="small">Exemple : \(1+1/\sqrt n\to1\gt0\) et \(n^2+3\to+\infty\), donc \(\left(1+\tfrac1{\sqrt n}\right)(n^2+3)\to+\infty\).</p>
+  </div>
+  <div class="box thm"><b>Quotient : dénominateur non nul aux rangs étudiés</b>
+    \[ u_n\to\ell,\ v_n\to\ell'\ne0\Rightarrow\frac{u_n}{v_n}\to\frac{\ell}{\ell'}\qquad u_n\to\ell,\ v_n\to\pm\infty\Rightarrow\frac{u_n}{v_n}\to0. \]
+    <div class="tw"><table class="lim"><tr><th>Numérateur</th><th>Dénominateur</th><th>Limite du quotient</th></tr>
+    <tr><td>\(\ell\gt0\) ou \(+\infty\)</td><td>0, par valeurs positives</td><td>\(+\infty\)</td></tr>
+    <tr><td>\(\ell\lt0\) ou \(-\infty\)</td><td>0, par valeurs positives</td><td>\(-\infty\)</td></tr>
+    <tr><td>\(\ell\gt0\) ou \(+\infty\)</td><td>0, par valeurs négatives</td><td>\(-\infty\)</td></tr>
+    <tr><td>\(\ell\lt0\) ou \(-\infty\)</td><td>0, par valeurs négatives</td><td>\(+\infty\)</td></tr>
+    <tr><td>\(+\infty\)</td><td>\(\ell'\gt0\) / \(\ell'\lt0\)</td><td>\(+\infty\) / \(-\infty\)</td></tr>
+    <tr><td>\(-\infty\)</td><td>\(\ell'\gt0\) / \(\ell'\lt0\)</td><td>\(-\infty\) / \(+\infty\)</td></tr>
+    <tr><td>\(0\)</td><td>\(0\)</td><td class="fi">F.I.</td></tr>
+    <tr><td>\(\pm\infty\)</td><td>\(\pm\infty\)</td><td class="fi">F.I.</td></tr></table></div>
+    <p class="small">Exemple rectifié du cours : \(n^2-3\to+\infty\), donc \(\dfrac2{n^2-3}\to0\).</p>
+  </div>
+  <div class="box warn"><b>Dénominateur qui tend vers 0</b>
+    <p>Examiner son signe : \(1/(1/n)\to+\infty\) mais \(1/(-1/n)\to-\infty\). Les règles valent également si les conditions sont vérifiées seulement à partir d'un certain rang.</p>
+  </div>
+</section>
+
+<section class="sec" id="ch1-6" data-t="Lever une forme indéterminée">
+  <h2><span class="no">6</span>Lever une forme indéterminée</h2>
+  <div class="box def"><b>Les quatre formes indéterminées</b>
+    \[ \infty-\infty,\qquad 0\times\infty,\qquad \frac\infty\infty,\qquad \frac00. \]
+    <p>Ces écritures décrivent des comportements, pas des calculs avec le nombre \(\infty\). Une forme indéterminée peut cacher une limite finie, infinie ou inexistante : il faut transformer l'expression, puis reprendre les règles.</p>
+  </div>
+  <div class="box ex"><b>Méthode 1. Factoriser par le terme dominant : \(n-3\sqrt n\)</b>
+    <p>Les deux termes tendent vers \(+\infty\) : forme \(\infty-\infty\). Pour \(n\ge1\) :
+    \[ n-3\sqrt n=n\left(1-\frac{3\sqrt n}{n}\right)=n\left(1-\frac3{\sqrt n}\right). \]
+    Or \(n\to+\infty\) et \(1-3/\sqrt n\to1\gt0\). Par la règle du produit : \(n-3\sqrt n\to+\infty\).</p>
+  </div>
+  <div class="box ex"><b>Méthode 2. Diviser par la puissance dominante : quotient de polynômes</b>
+    <p>\(\dfrac{5n^2+4}{4n^2+3n}\) présente une forme \(\dfrac\infty\infty\). Pour \(n\ge1\), factoriser par \(n^2\) :
+    \[ \frac{5n^2+4}{4n^2+3n}=\frac{n^2\left(5+\frac4{n^2}\right)}{n^2\left(4+\frac3n\right)}=\frac{5+\frac4{n^2}}{4+\frac3n}. \]
+    Le numérateur tend vers 5, le dénominateur vers \(4\ne0\). Donc \(\dfrac{5n^2+4}{4n^2+3n}\to\dfrac54\).</p>
+  </div>
+  <div class="box ex"><b>Méthode 3. Multiplier par le conjugué : \(\sqrt{n+2}-\sqrt n\)</b>
+    <p>Les deux racines tendent vers \(+\infty\) : forme \(\infty-\infty\). Utiliser \((a-b)(a+b)=a^2-b^2\) :
+    \[ \sqrt{n+2}-\sqrt n=\frac{(\sqrt{n+2}-\sqrt n)(\sqrt{n+2}+\sqrt n)}{\sqrt{n+2}+\sqrt n}=\frac{(n+2)-n}{\sqrt{n+2}+\sqrt n}=\frac2{\sqrt{n+2}+\sqrt n}. \]
+    Le dénominateur tend vers \(+\infty\), donc \(\sqrt{n+2}-\sqrt n\to0\).</p>
+  </div>
+  <div class="box note"><b>Pourquoi « indéterminée » ?</b>
+    <p>Même forme \(\infty-\infty\), conclusions différentes : \(n-n=0\to0\) ; \(2n-n=n\to+\infty\) ; \(n-2n=-n\to-\infty\).</p>
+    <p>Même forme \(0\times\infty\) : \(\tfrac1n\cdot n=1\) ; \(\tfrac1{n^2}\cdot n=\tfrac1n\to0\) ; \(\tfrac1{\sqrt n}\cdot n=\sqrt n\to+\infty\).</p>
+  </div>
+  <div class="box tip"><b>Rédaction attendue dans un calcul de limite</b>
+    <ol class="flow inline"><li>Identifier les limites des termes</li><li>Reconnaître l'indétermination</li><li>Écrire une égalité algébrique exacte</li><li>Calculer les nouvelles limites</li><li>Citer la règle et conclure</li></ol>
+  </div>
+</section>
+
+<section class="sec" id="ch1-7" data-t="Suites géométriques">
+  <h2><span class="no">7</span>Comportement des suites géométriques</h2>
+  <div class="box thm"><b>Limite de \(q^n\) : tous les cas</b>
+    <div class="tw"><table class="lim"><tr><th>Raison \(q\)</th><td>\(q\le-1\)</td><td>\(-1\lt q\lt1\)</td><td>\(q=1\)</td><td>\(q\gt1\)</td></tr>
+    <tr><th>Comportement de \(q^n\)</th><td>pas de limite</td><td>\(0\)</td><td>\(1\)</td><td>\(+\infty\)</td></tr></table></div>
+    <p class="small">Pour \(q=0\), on étudie \(0^n\) à partir de \(n=1\) : tous ces termes valent 0. Pour la suite géométrique, conserver \(u_0\) comme terme initial et utiliser \(u_n=u_0q^n\) pour \(n\ge1\).</p>
+  </div>
+
+  <div class="widget" id="w-geo">
+    <div class="whead"><b>Explorateur de suite géométrique</b><span>\(u_n=u_0\,q^n\)</span></div>
+    <div class="wbody">
+      <div class="ctrl">
+        <label>\(u_0\) <output id="g-u0o">1</output><input type="range" id="g-u0" min="-5" max="5" step="0.5" value="1"></label>
+        <label>\(q\) <output id="g-qo">0.8</output><input type="range" id="g-q" min="-2.5" max="2.5" step="0.05" value="0.8"></label>
+      </div>
+      <canvas id="g-cv" width="720" height="300" aria-label="Termes de la suite géométrique"></canvas>
+      <p class="verdict" id="g-v"></p>
+    </div>
+  </div>
+
+  <div class="box thm"><b>Cas \(q\gt1\)</b> <span class="tag">démonstration au programme</span></div>
+  <details class="box proof"><summary>Démonstration</summary>
+    <p>Posons \(a=q-1\gt0\). D'après Bernoulli : \(q^n=(1+a)^n\ge1+na\).</p>
+    <p>Soit \(A\in\mathbb R\). Choisir \(N=\max\!\left(0,\tfrac{A-1}{a}\right)\). Pour tout \(n\ge N\) : \(1+na\ge A\) puis \(q^n\ge1+na\ge A\). La définition d'une limite infinie donne \(q^n\to+\infty\).</p>
+  </details>
+  <div class="two">
+    <div class="box"><b>Cas \(q=1\) et \(q=0\)</b>
+      <p>Si \(q=1\), \(q^n=1\), donc \(q^n\to1\). Si \(q=0\), \(q^n=0\) pour \(n\ge1\), donc \(q^n\to0\).</p></div>
+    <div class="box"><b>Cas \(0\lt q\lt1\)</b>
+      <p>\(1/q\gt1\), donc \((1/q)^n\to+\infty\) par le cas précédent. Par inverse : \(q^n=\dfrac1{(1/q)^n}\to0\).</p></div>
+  </div>
+  <div class="two">
+    <div class="box"><b>Cas \(-1\lt q\lt0\)</b>
+      <p>\(0\lt|q|\lt1\), donc \(|q|^n\to0\). Pour tout \(\varepsilon\gt0\), à partir d'un certain rang, \(|q^n-0|=|q|^n\lt\varepsilon\). Par la définition d'une limite finie : \(q^n\to0\). L'alternance des signes n'empêche pas la convergence.</p></div>
+    <div class="box"><b>Cas \(q\le-1\)</b>
+      <p>Si \(q=-1\) : \(q^{2n}=1\) et \(q^{2n+1}=-1\), la suite alterne entre deux valeurs distinctes : pas de limite.</p>
+      <p>Si \(q\lt-1\) : \(q^2\gt1\), donc \(q^{2n}=(q^2)^n\to+\infty\) puis \(q^{2n+1}=q\,(q^2)^n\to-\infty\). Rangs pairs et impairs incompatibles : pas de limite.</p></div>
+  </div>
+  <div class="box def"><b>Passer de \(q^n\) à \(u_n=u_0q^n\)</b>
+    <p>Si \(u_0=0\) : tous les termes valent 0. Si \(u_0\ne0\) :</p>
+    <ul><li>\(|q|\lt1\Rightarrow u_n\to0\) ; \(q=1\Rightarrow u_n\to u_0\).</li>
+    <li>\(q\gt1\) : \(u_n\to+\infty\) si \(u_0\gt0\), et \(u_n\to-\infty\) si \(u_0\lt0\).</li>
+    <li>\(q\le-1\) : la suite n'a pas de limite.</li></ul>
+  </div>
+  <div class="box warn"><b>Attention</b>
+    <p>Le tableau porte d'abord sur \(q^n\), pas automatiquement sur toute suite de raison \(q\). Vérifier le premier terme et distinguer \(q=-1\), \(q=1\), \(q=0\) des autres cas.</p>
+  </div>
+</section>
+
+<section class="sec" id="ch1-8" data-t="Applications et réflexes">
+  <h2><span class="no">8</span>Applications et réflexes de révision</h2>
+  <div class="box ex"><b>Applications géométriques du cours</b>
+    <ol>
+      <li>\(4^n\to+\infty\), donc \(-5\times4^n\to-\infty\).</li>
+      <li>\((-2)^n\) n'a pas de limite ; multiplier par \(1/3\ne0\) conserve cette absence de limite. Donc \((-2)^n/3\) n'a pas de limite.</li>
+      <li>\(2^n-3^n\) présente une forme \(\infty-\infty\). Factoriser par \(3^n\) : \[2^n-3^n=3^n\left[\left(\tfrac23\right)^n-1\right].\] Comme \((2/3)^n\to0\), le crochet tend vers \(-1\lt0\) et \(3^n\to+\infty\). Donc \(2^n-3^n\to-\infty\).</li>
+    </ol>
+  </div>
+  <div class="box def"><b>Algorithme du cours : chercher le premier rang \(u_n\ge A\)</b>
+    <p>Pour \(u_0=2\), \(u_{n+1}=4u_n\) : la suite est croissante et tend vers \(+\infty\).</p>
+<pre><code>def seuil(a):
+    n = 0
+    u = 2
+    while u &lt; a:
+        n = n + 1
+        u = 4 * u
+    return n</code></pre>
+    <p>Au début de chaque test, <code>u</code> = \(u_n\). La limite \(+\infty\) garantit que la boucle termine. À la sortie, \(u_n\ge a\). Pour \(a=100\) : \(u_0=2,\ u_1=8,\ u_2=32,\ u_3=128\) ; la fonction renvoie 3. Pour chercher \(u_n\gt a\), utiliser <code>while u &lt;= a</code>.</p>
+  </div>
+
+  <div class="widget" id="w-seuil">
+    <div class="whead"><b>Seuil d'une suite géométrique</b><span>premier rang tel que \(u_n\ge A\)</span></div>
+    <div class="wbody">
+      <div class="ctrl">
+        <label>\(u_0\)<input type="number" id="s-u0" value="2" step="any"></label>
+        <label>\(q\)<input type="number" id="s-q" value="4" step="any"></label>
+        <label>\(A\)<input type="number" id="s-a" value="100" step="any"></label>
+      </div>
+      <p class="verdict" id="s-out"></p>
+      <div class="chips" id="s-terms"></div>
+    </div>
+  </div>
+
+  <div class="box note"><b>Rappels de Première utiles</b>
+    <p>Suite arithmétique de raison \(r\) : \(u_{n+1}=u_n+r\), \(u_n=u_p+(n-p)r\). Suite géométrique de raison \(q\) : \(u_{n+1}=qu_n\), \(u_n=u_pq^{n-p}\) pour \(n\ge p\) ; pour \(q=0\), traiter séparément le terme de départ.</p>
+    \[ \text{Somme arithmétique : }u_p+\dots+u_n=(n-p+1)\frac{u_p+u_n}{2}. \]
+    \[ \text{Somme géométrique : }u_p+\dots+u_n=u_p\frac{1-q^{\,n-p+1}}{1-q}\quad(q\ne1). \]
+    <p>Si \(q=1\), la somme vaut \((n-p+1)u_p\). <b>Suite auxiliaire</b> : si \(u_{n+1}=au_n+b\) avec \(a\ne1\), poser \(L=\tfrac b{1-a}\) et \(v_n=u_n-L\). Alors \(v_{n+1}=av_n\), donc \(u_n=L+(u_0-L)a^n\).</p>
+  </div>
+  <div class="box tip"><b>Quelle méthode choisir ?</b>
+    <ul>
+      <li>Propriété valable à tous les rangs → <b>récurrence</b>, si adaptée à la définition de la suite.</li>
+      <li>Limite par définition → fixer \(A\) ou \(\varepsilon\), résoudre l'inégalité, choisir \(N\), vérifier tout \(n\ge N\).</li>
+      <li>Calcul de limite → références + règles ; si F.I., factorisation ou conjugué.</li>
+      <li>Puissances géométriques → examiner la raison, puis le coefficient multiplicateur.</li>
+      <li>Seuil numérique → suivre la boucle et distinguer \(\ge\) de \(\gt\).</li>
+    </ul>
+  </div>
+  <div class="box def"><b>Démonstrations à maîtriser</b>
+    <p><b>Au programme :</b> inégalité de Bernoulli ; suite croissante non majorée \(\Rightarrow\) \(\to+\infty\) ; comportement de \(q^n\) (preuve complète et cas particuliers).</p>
+    <p><b>Également développées :</b> preuves par seuil pour \(n\), \(\sqrt n\), \(n^2\) ; preuves avec \(\varepsilon\) pour \(1/n\), \(1/\sqrt n\), \(1/n^2\) ; récurrences des exemples.</p>
+  </div>
+  <div class="quiz" data-quiz="q1"></div>
+</section>
+</article>
+
+<article class="chapter" id="ch2" hidden data-title="Combinatoire et dénombrement">
+<header class="chead">
+  <span class="kicker">Chapitre 2</span>
+  <h1>Combinatoire et dénombrement</h1>
+  <p class="lede">Ensembles finis, principes additif et multiplicatif, listes, arrangements, permutations, combinaisons, coefficients binomiaux et algorithmes.</p>
+</header>
+
+<section class="sec" id="ch2-1" data-t="Ensembles finis">
+  <h2><span class="no">1</span>Ensembles finis</h2>
+  <div class="box note"><b>Vocabulaire et notations</b>
+    <p>Un <i>ensemble fini</i> contient un nombre fini d'éléments. Son <i>cardinal</i> est ce nombre : \(\operatorname{card}(E)\), \(|E|\) ou \(\#E\). <i>Dénombrer</i>, c'est déterminer un cardinal.</p>
+    <p>\(\varnothing\) est l'ensemble vide : \(|\varnothing|=0\). \(x\in E\) : \(x\) appartient à \(E\) ; \(x\notin E\) : le contraire. Dans un ensemble, l'ordre ne compte pas et les doublons ne sont pas conservés.</p>
+  </div>
+  <div class="two">
+    <div class="box def"><b>Inclusion et complémentaire</b>
+      <p>\(A\subseteq E\) : tout élément de \(A\) est dans \(E\) (\(A\) est une <i>partie</i> ou un <i>sous-ensemble</i> de \(E\)). Alors \(|A|\le|E|\).</p>
+      <p>Complémentaire de \(A\) dans \(E\) : \(\overline A=E\setminus A=\{x\in E:\ x\notin A\}\). Il dépend de l'ensemble de référence \(E\).</p></div>
+    <div class="box def"><b>Intersection et union</b>
+      <p>\(A\cap B=\{x:\ x\in A\text{ et }x\in B\}\).</p>
+      <p>\(A\cup B=\{x:\ x\in A\text{ ou }x\in B\}\). Le « ou » inclut les éléments présents dans les deux ensembles.</p>
+      <p>\(A\) et \(B\) sont <i>disjoints</i> si \(A\cap B=\varnothing\).</p></div>
+  </div>
+  <div class="box ex"><b>Exemple du cours : opérations sur deux ensembles</b>
+    <p>\(A=\{1,3,8,4\}\) et \(B=\{4,6,5,1,3\}\) ; donc \(|A|=4\) et \(|B|=5\).</p>
+    <ol>
+      <li>Un ensemble contenant \(A\) : \(C=\{1,3,8,4,5\}\) convient, avec \(A\subseteq C\).</li>
+      <li>Une partie non vide de \(A\), distincte de \(A\) : \(D=\{1,3,4\}\).</li>
+      <li>Un élément de \(B\) absent de \(A\) : \(6\) (ou \(5\)).</li>
+      <li>Intersection : \(A\cap B=\{1,3,4\}\), donc \(|A\cap B|=3\).</li>
+      <li>Union : \(A\cup B=\{1,3,4,5,6,8\}\), donc \(|A\cup B|=6\).</li>
+      <li>Complémentaire de \(A\) dans \(A\cup B\) : \((A\cup B)\setminus A=\{5,6\}\).</li>
+    </ol>
+  </div>
+  <figure class="fig">
+    <svg viewBox="0 0 420 190" role="img" aria-label="Diagramme de Venn de A et B">
+      <rect class="vbox" x="10" y="10" width="400" height="170" rx="6"/><text class="lb2" x="20" y="30">E = A ∪ B</text>
+      <circle class="va" cx="165" cy="100" r="68"/><circle class="vb" cx="255" cy="100" r="68"/>
+      <text class="lb2 a" x="110" y="56">A</text><text class="lb2 b" x="300" y="56">B</text>
+      <text class="vt" x="125" y="105">8</text><text class="vt" x="210" y="105">1, 3, 4</text><text class="vt" x="290" y="105">5, 6</text>
+    </svg>
+    <figcaption>La zone centrale est l'intersection. Chaque élément est placé une seule fois : \(|A\cup B|=1+3+2=6\).</figcaption>
+  </figure>
+  <div class="box warn"><b>Appartenance ≠ inclusion</b>
+    <p>\(1\in A\), mais \(\{1\}\subseteq A\). De même, \(\varnothing\subseteq E\) pour tout \(E\) : l'ensemble vide est une partie, pas nécessairement un élément de \(E\).</p>
+  </div>
+</section>
+
+<section class="sec" id="ch2-2" data-t="Addition et multiplication">
+  <h2><span class="no">2</span>Les principes de dénombrement</h2>
+  <div class="box thm"><b>Principe additif : des cas disjoints</b>
+    <p>Si \(A\cap B=\varnothing\), alors \(|A\cup B|=|A|+|B|\). On additionne les nombres de possibilités lorsque l'on sépare en cas incompatibles. Pour plusieurs ensembles deux à deux disjoints, on additionne tous les cardinaux.</p>
+    <p><b>Complémentaire</b> : \(|\overline A|=|E|-|A|\), car \(E=A\cup\overline A\) et \(A\cap\overline A=\varnothing\).</p>
+    <p><b>Deux ensembles qui se recouvrent</b> : \(|A\cup B|=|A|+|B|-|A\cap B|\). On retire l'intersection comptée deux fois.</p>
+  </div>
+  <div class="box ex"><b>Exemple du cours : latin et théâtre</b>
+    <p>16 élèves font latin, 14 théâtre, 5 les deux, 8 aucune option. Latin seul : \(16-5=11\) ; théâtre seul : \(14-5=9\).</p>
+    <p>\(|L\cup T|=16+14-5=25\). Il y a donc \(25+8=33\) élèves.</p>
+    <p class="small">Autre exemple : deux ensembles disjoints de 4 et 3 éléments ont une union de 7 éléments.</p>
+  </div>
+  <figure class="fig">
+    <svg viewBox="0 0 420 190" role="img" aria-label="Diagramme latin théâtre">
+      <rect class="vbox" x="10" y="10" width="400" height="170" rx="6"/>
+      <circle class="va" cx="160" cy="95" r="62"/><circle class="vb" cx="240" cy="95" r="62"/>
+      <text class="lb2 a" x="100" y="40">Latin</text><text class="lb2 b" x="270" y="40">Théâtre</text>
+      <text class="vt" x="125" y="100">11</text><text class="vt" x="200" y="100">5</text><text class="vt" x="268" y="100">9</text>
+      <text class="vt" x="330" y="160">8 (aucune)</text>
+    </svg>
+  </figure>
+  <div class="box thm"><b>Principe multiplicatif : des choix successifs</b>
+    <p>Si une construction comporte \(k\) étapes et, pour chaque choix précédent, offre \(n_i\) possibilités à l'étape \(i\), le total est \(n_1n_2\cdots n_k\).</p>
+    <p><b>Produit cartésien</b> : \(E\times F=\{(x,y):\ x\in E,\ y\in F\}\) et \(|E\times F|=|E|\,|F|\).</p>
+    <p>Un <i>\(k\)-uplet</i> de \(E\) est une liste ordonnée de \(k\) éléments de \(E\), avec répétitions possibles. L'ensemble des \(k\)-uplets est \(E^k=E\times\dots\times E\) :  \(|E|=n\Rightarrow|E^k|=n^k\).</p>
+  </div>
+  <div class="box ex"><b>Exemples du cours</b>
+    <p><i>Menus</i> : 3 entrées, 4 plats, 2 desserts ⇒ \(3\times4\times2=24\) menus. Si le dessert est imposé : \(3\times4\times1=12\).</p>
+    <p><i>Deux lancers de dé</i> : \(E=\{1,\dots,6\}\) ; les résultats sont des couples ordonnés de \(E^2\) ; il y a \(6^2=36\) issues. \((1,2)\ne(2,1)\), tandis que \((5,5)\) est autorisé.</p>
+    <p><i>Somme multiple de 3</i> : les sommes 3, 6, 9, 12 correspondent à 2, 5, 4, 1 couples, soit 12 issues favorables. Avec des lancers indépendants et un dé équilibré : \(P=\tfrac{12}{36}=\tfrac13\).</p>
+  </div>
+  <div class="box tip"><b>Ajouter ou multiplier ?</b>
+    <p>Ajouter pour des <i>cas disjoints</i> ; multiplier pour les <i>étapes d'une même construction</i>. Le quotient « favorables / total » exige l'équiprobabilité des issues.</p>
+  </div>
+</section>
+
+<section class="sec" id="ch2-3" data-t="Listes et arrangements">
+  <h2><span class="no">3</span>Listes avec répétitions et arrangements</h2>
+  <div class="box thm"><b>Avec répétitions : \(n^p\) possibilités</b>
+    <p>Choisir une liste de \(p\) éléments d'un ensemble à \(n\) éléments, avec répétitions autorisées, donne \(n\) choix à chacune des \(p\) positions : \(n^p\). Modèle : tirages successifs <i>avec remise</i>, codes dont les caractères peuvent se répéter.</p>
+  </div>
+  <div class="box ex"><b>Codes du cours</b>
+    <p>Deux lettres parmi 26, puis dix chiffres : \(26^2\times10^{10}=6\,760\,000\,000\,000\) (6 760 milliards de codes).</p>
+    <p>Une lettre parmi A, B, puis quatre chiffres : \(2\times10^4=20\,000\).</p>
+    <p>Deux lettres parmi A, B, puis neuf chiffres : \(2^2\times10^9=4\,000\,000\,000\). Les zéros initiaux sont autorisés, car ce sont des codes.</p>
+  </div>
+  <div class="box def"><b>Factorielle</b>
+    <p>Pour \(n\in\mathbb N^*\) : \(n!=1\times2\times\dots\times n\). Par convention, \(0!=1\).</p>
+    \[ 1!=1,\quad 3!=6,\quad 5!=120,\quad n!=n\,(n-1)!\ (n\ge1). \]
+    <p class="small">Pour simplifier un quotient de factorielles, développer seulement les facteurs qui ne se simplifient pas : \(\dfrac{12!}{9!}=12\times11\times10\).</p>
+  </div>
+  <div class="box thm"><b>Arrangement : liste ordonnée sans répétition</b>
+    <p>Un <i>arrangement</i> de \(p\) éléments de \(E\) est un \(p\)-uplet dont les éléments sont deux à deux distincts, avec \(0\le p\le n=|E|\). L'ordre compte, les éléments ne se répètent pas. Modèle : tirages successifs <i>sans remise</i>, classement, rôles distincts.</p>
+    \[ A_n^p=n(n-1)\cdots(n-p+1)=\frac{n!}{(n-p)!}. \]
+    <p class="small">Pour \(p=0\), une seule liste vide : \(A_n^0=1\). Pour \(p\gt n\), aucun arrangement sans répétition n'est possible.</p>
+  </div>
+  <details class="box proof"><summary>Justification de la formule</summary>
+    <p>La première position offre \(n\) choix. La deuxième en offre \(n-1\), car un élément est déjà utilisé. À la \(p\)-ième, il reste \(n-p+1\) choix. Le principe multiplicatif donne le produit annoncé ; la formule factorielle résulte de la simplification.</p>
+  </details>
+  <div class="box ex"><b>Exemples du cours</b>
+    <p>Dans \(E=\{a,b,o,p,r\}\), \((b,o,a)\) et \((r,a,p)\) sont des arrangements à 3 éléments. \((p,a,r)\ne(r,a,p)\) : l'ordre les distingue. \((b,a,r,b,a,r)\) n'en est pas un, car il répète des éléments.</p>
+    <p>Arrangements de 3 lettres parmi 5 : \(A_5^3=5\times4\times3=60\).</p>
+    <p>Branchement de trois prises distinctes sur douze positions : \(A_{12}^3=\dfrac{12!}{9!}=12\times11\times10=1\,320\). Une seule affectation étant correcte, la probabilité de retrouver le bon branchement est \(\tfrac1{1320}\).</p>
+  </div>
+</section>
+
+<section class="sec" id="ch2-4" data-t="Permutations et parties">
+  <h2><span class="no">4</span>Permutations et parties d'un ensemble</h2>
+  <div class="box thm"><b>Permutation : ordonner tous les éléments distincts</b>
+    <p>Une permutation d'un ensemble \(E\) à \(n\) éléments est un arrangement de ses \(n\) éléments : chaque élément est utilisé exactement une fois.</p>
+    \[ \text{Nombre de permutations}=A_n^n=\frac{n!}{0!}=n!. \]
+    <p class="small">Justification : \(n\) choix pour la première position, \(n-1\) pour la deuxième, jusqu'à 1 pour la dernière.</p>
+  </div>
+  <div class="box ex"><b>Exemples du cours</b>
+    <p>Trois personnes sur trois places d'un banc : \(3!=6\) placements. Ordre de passage de cinq élèves à l'oral : \(5!=120\). Si seulement trois passent : \(A_5^3=60\) (c'est alors un arrangement).</p>
+    <p>Dans \(E=\{1,2,3,4,5\}\), \((1,3,2,5,4)\) et \((5,1,2,3,4)\) sont des permutations.</p>
+  </div>
+  <figure class="fig">
+    <svg viewBox="0 0 420 230" role="img" aria-label="Arbre des anagrammes de BAC">
+      <g class="tr"><line x1="40" y1="115" x2="130" y2="40"/><line x1="40" y1="115" x2="130" y2="115"/><line x1="40" y1="115" x2="130" y2="190"/>
+      <line x1="150" y1="40" x2="250" y2="22"/><line x1="150" y1="40" x2="250" y2="58"/>
+      <line x1="150" y1="115" x2="250" y2="97"/><line x1="150" y1="115" x2="250" y2="133"/>
+      <line x1="150" y1="190" x2="250" y2="172"/><line x1="150" y1="190" x2="250" y2="208"/></g>
+      <text class="lb2" x="4" y="119">Départ</text>
+      <text class="vt a" x="140" y="45">B</text><text class="vt a" x="140" y="120">A</text><text class="vt a" x="140" y="195">C</text>
+      <text class="vt" x="262" y="26">BAC</text><text class="vt" x="262" y="62">BCA</text>
+      <text class="vt" x="262" y="101">ABC</text><text class="vt" x="262" y="137">ACB</text>
+      <text class="vt" x="262" y="176">CBA</text><text class="vt" x="262" y="212">CAB</text>
+    </svg>
+    <figcaption>Anagrammes de « BAC » : lettres distinctes, \(3\times2\times1=6\) anagrammes.</figcaption>
+  </figure>
+  <div class="box def"><b>Ensemble des parties \(\mathcal P(E)\)</b>
+    <p>Une partie de \(E\) est un sous-ensemble de \(E\). L'ensemble de toutes les parties est \(\mathcal P(E)\) : c'est un ensemble d'ensembles. Pour \(E=\{a,b,c\}\) :</p>
+    \[ \mathcal P(E)=\{\varnothing,\{a\},\{b\},\{c\},\{a,b\},\{a,c\},\{b,c\},\{a,b,c\}\}. \]
+    <p>Il y a 8 parties. On a toujours \(\varnothing\in\mathcal P(E)\) et \(E\in\mathcal P(E)\).</p>
+  </div>
+  <div class="box thm"><b>Propriété : \(|\mathcal P(E)|=2^n\)</b></div>
+  <details class="box proof"><summary>Démonstration</summary>
+    <p>Pour construire une partie, chaque élément de \(E\) donne deux choix : le prendre ou ne pas le prendre. Ces \(n\) décisions donnent, par multiplication, \(|\mathcal P(E)|=\underbrace{2\times\dots\times2}_{n\text{ facteurs}}=2^n\).</p>
+    <p>On peut coder chaque partie par un \(n\)-uplet de 0 et de 1 : 1 si l'élément est choisi, 0 sinon. Par exemple, pour \((a,b,c)\), \((1,0,1)\) code \(\{a,c\}\).</p>
+  </details>
+  <div class="box warn"><b>Éléments distincts seulement</b>
+    <p>Les formules de permutation concernent des éléments distincts. Un mot contenant des lettres répétées demande un traitement supplémentaire : compter systématiquement \(n!\) ferait des doublons.</p>
+  </div>
+</section>
+
+<section class="sec" id="ch2-5" data-t="Combinaisons">
+  <h2><span class="no">5</span>Combinaisons d'un ensemble fini</h2>
+  <div class="box thm"><b>Définition et formule</b>
+    <p>Une <i>combinaison</i> de \(p\) éléments d'un ensemble \(E\) à \(n\) éléments est une <b>partie de cardinal \(p\)</b>, avec \(0\le p\le n\). Ni ordre, ni répétition. Notations : \(\binom np\) ou \(C_n^p\).</p>
+    \[ \binom np=\frac{n!}{p!\,(n-p)!}=\frac{A_n^p}{p!}. \]
+    <p class="small">\(\{1,2,3\}\) est une combinaison à trois éléments de \(\{1,2,3,4,5\}\). \(\{1,2\}=\{2,1\}\) : inverser l'ordre ne crée pas un nouveau choix.</p>
+  </div>
+  <div class="box note"><b>Pourquoi diviser par \(p!\) ?</b>
+    <p>Les arrangements comptent les choix ordonnés. Une même partie de \(p\) éléments distincts peut être ordonnée de \(p!\) façons. Chaque partie est donc comptée \(p!\) fois parmi les \(A_n^p\) arrangements : \(A_n^p=\binom np\,p!\), d'où \(\binom np=\dfrac{A_n^p}{p!}\).</p>
+    <div class="perm"><div class="pp">{a, b, c}<small>une partie</small></div><span>→</span><div class="pl">abc · acb · bac · bca · cab · cba<small>3! = 6 listes</small></div></div>
+  </div>
+  <div class="box def"><b>Cas particuliers à connaître</b>
+    \[ \binom n0=1,\qquad \binom nn=1,\qquad \binom n1=n\ (n\ge1),\qquad \binom n{n-1}=n\ (n\ge1). \]
+    <p>Une seule partie vide, une seule partie égale à \(E\), \(n\) parties à un élément. Si l'on doit compter des parties de taille \(p\gt n\), le nombre est 0.</p>
+  </div>
+
+  <div class="widget" id="w-comb">
+    <div class="whead"><b>Calculatrice de dénombrement</b><span>\(n^p\), \(A_n^p\), \(\binom np\), \(n!\), \(2^n\)</span></div>
+    <div class="wbody">
+      <div class="ctrl">
+        <label>\(n\)<input type="number" id="c-n" value="34" min="0" max="200"></label>
+        <label>\(p\)<input type="number" id="c-p" value="4" min="0" max="200"></label>
+      </div>
+      <div class="results" id="c-out"></div>
+    </div>
+  </div>
+
+  <div class="box ex"><b>Exemple du cours : élire quatre délégués</b>
+    <p>Une classe compte 18 filles et 16 garçons, soit 34 élèves. Les quatre élus ont le même rôle : aucun ordre.</p>
+    <p><b>a.</b> Sans contrainte : \(\dbinom{34}4=\dfrac{34!}{4!\,30!}=\dfrac{34\times33\times32\times31}{4\times3\times2\times1}=46\,376\).</p>
+    <p><b>b.</b> Emma et Bastien ne peuvent pas être élus ensemble : compter les cas interdits puis les retirer. Si tous deux sont élus, il reste deux élèves à choisir parmi les 32 autres : \(\dbinom{32}2=\dfrac{32\times31}2=496\). Le nombre d'élections autorisées est \(\dbinom{34}4-\dbinom{32}2=46\,376-496=45\,880\).</p>
+  </div>
+  <div class="box note"><b>Distinguer les situations proches</b>
+    <ul>
+      <li>Choisir un groupe de trois élèves parmi cinq : \(\binom53=10\).</li>
+      <li>Choisir trois élèves et fixer leur ordre de passage : \(A_5^3=60\).</li>
+      <li>Faire passer les cinq dans un ordre déterminé : \(5!=120\).</li>
+    </ul>
+  </div>
+  <div class="box warn"><b>« Choisir \(p\) parmi \(n\) » ne suffit pas</b>
+    <p>Vérifier si les places ou les rôles sont distincts. Si chacun reçoit un rôle différent, l'ordre compte et l'on utilise un arrangement.</p>
+  </div>
+</section>
+
+<section class="sec" id="ch2-6" data-t="Coefficients binomiaux et Pascal">
+  <h2><span class="no">6</span>Coefficients binomiaux et triangle de Pascal</h2>
+  <p class="small">Le nombre \(\binom np\) est appelé coefficient binomial. La loi binomiale sera étudiée dans un autre chapitre.</p>
+  <div class="box thm"><b>Symétrie</b>
+    <p>Pour \(0\le p\le n\) : \(\dbinom np=\dbinom n{n-p}\). Choisir les \(p\) éléments retenus revient à choisir les \(n-p\) éléments exclus ; la formule factorielle est également inchangée.</p>
+    <p class="small">Exemple : \(\binom{25}{24}=\binom{25}{1}=25\).</p>
+  </div>
+  <div class="box thm"><b>Relation de Pascal</b> <span class="tag">démonstration au programme</span>
+    <p>Pour \(n\ge1\) et \(0\le p\lt n\) : \[ \binom np+\binom n{p+1}=\binom{n+1}{p+1}. \]</p>
+  </div>
+  <details class="box proof"><summary>Preuve algébrique</summary>
+    <p>Les factorielles ci-dessous sont définies car \(p\lt n\) :</p>
+    \[\begin{aligned}
+    \binom np+\binom n{p+1}&=\frac{n!}{p!\,(n-p)!}+\frac{n!}{(p+1)!\,(n-p-1)!}\\
+    &=\frac{n!}{p!\,(n-p-1)!}\left(\frac1{n-p}+\frac1{p+1}\right)\\
+    &=\frac{n!}{p!\,(n-p-1)!}\cdot\frac{n+1}{(n-p)(p+1)}\\
+    &=\frac{(n+1)!}{(p+1)!\,(n-p)!}=\binom{n+1}{p+1}.
+    \end{aligned}\]
+    <p class="small">On utilise \((n-p)!=(n-p)(n-p-1)!\) et \((p+1)!=(p+1)\,p!\).</p>
+  </details>
+
+  <div class="widget" id="w-pascal">
+    <div class="whead"><b>Triangle de Pascal interactif</b><span>cliquez sur un coefficient</span></div>
+    <div class="wbody">
+      <div class="ctrl"><label>Lignes <output id="pa-o">8</output><input type="range" id="pa-n" min="3" max="12" step="1" value="8"></label></div>
+      <div class="pascal" id="pa-tri" role="group" aria-label="Triangle de Pascal"></div>
+      <p class="verdict" id="pa-msg">Cliquez sur un coefficient : il s'obtient en additionnant les deux au-dessus.</p>
+    </div>
+  </div>
+  <p class="small">Les bords valent 1. L'entrée de ligne \(n\), colonne \(p\) vaut \(\binom np\). Par exemple \(\binom42=\binom31+\binom32=3+3=6\) ; \(\binom53+\binom54=10+5=15=\binom64\).</p>
+
+  <div class="box thm"><b>Somme des coefficients</b> <span class="tag">démonstration au programme</span>
+    \[ \sum_{p=0}^{n}\binom np=2^n. \]
+  </div>
+  <details class="box proof"><summary>Démonstration par double dénombrement</summary>
+    <p><i>Premier comptage.</i> Toutes les parties de \(E\) se répartissent en classes disjointes selon leur taille : \(0,1,\dots,n\). Il y a \(\binom np\) parties de taille \(p\), donc \(\sum_{p=0}^n\binom np\) parties au total.</p>
+    <p><i>Second comptage.</i> Pour chaque élément, deux choix, le prendre ou l'exclure. Il y a donc \(2^n\) parties.</p>
+    <p>Ces deux comptages portent sur le même ensemble : les résultats sont égaux.</p>
+    <p class="small">Exemple : \(E=\{1,2,3\}\) possède \(1+3+3+1=8=2^3\) parties.</p>
+  </details>
+  <div class="box warn"><b>Domaine de la relation de Pascal</b>
+    <p>Utiliser \(p\lt n\). Le cas \(p=n\) demande la convention supplémentaire \(\binom n{n+1}=0\), absente de la preuve par factorielles.</p>
+  </div>
+</section>
+
+<section class="sec" id="ch2-7" data-t="Algorithmes">
+  <h2><span class="no">7</span>Les algorithmes du cours</h2>
+  <p class="small">Les paramètres sont des entiers : \(n\ge0\) ; pour les arrangements, \(0\le k\le n\).</p>
+  <div class="two">
+    <div class="box"><b>Factorielle</b>
+<pre><code>def fact(n):
+    f = 1
+    for k in range(1, n + 1):
+        f = f * k
+    return f</code></pre>
+      <p class="small"><code>range(1, n + 1)</code> parcourt \(1,\dots,n\). Pour \(n=0\), la boucle est vide et renvoie bien 1.</p></div>
+    <div class="box"><b>Arrangements \(A_n^k\)</b>
+<pre><code>def kuplets_distincts(n, k):
+    c = 1
+    for i in range(k):
+        c = c * (n - i)
+    return c</code></pre>
+      <p class="small">On multiplie \(n,\ n-1,\dots,n-k+1\). Pour \(k=0\), le résultat est 1.</p></div>
+  </div>
+  <div class="box"><b>Générer une permutation aléatoire de \(\{1,\dots,n\}\)</b>
+<pre><code>from random import randint
+
+def generer_perm(n):
+    perm = []
+    urne = list(range(1, n + 1))
+    for k in range(n):
+        index = randint(0, len(urne) - 1)
+        choix = urne.pop(index)
+        perm.append(choix)
+    return perm</code></pre>
+    <p class="small"><code>urne</code> contient les nombres non encore tirés. <code>pop(index)</code> retire et renvoie l'élément choisi ; <code>append</code> l'ajoute à la permutation. <b>Indice corrigé</b> : <code>randint</code> inclut sa borne supérieure, les indices valides vont de 0 à <code>len(urne) - 1</code>. Chaque nombre apparaît une fois ; des choix uniformes sans remise donnent une permutation uniforme.</p>
+  </div>
+  <div class="two">
+    <div class="box"><b>Parties à deux éléments</b>
+<pre><code>def gen_parties_2(n):
+    L = []
+    for i in range(1, n):
+        for j in range(i + 1, n + 1):
+            L.append([i, j])
+    return L</code></pre>
+      <p class="small">La condition \(i\lt j\) évite les répétitions et les doublons dus à l'ordre. Résultat : \(\binom n2\) listes.</p></div>
+    <div class="box"><b>Parties à trois éléments</b>
+<pre><code>def gen_parties_3(n):
+    L = []
+    for i in range(1, n - 1):
+        for j in range(i + 1, n):
+            for k in range(j + 1, n + 1):
+                L.append([i, j, k])
+    return L</code></pre>
+      <p class="small">On impose \(i\lt j\lt k\). Résultat : \(\binom n3\) listes, chacune représentant une partie.</p></div>
+  </div>
+  <div class="box ex"><b>Vérifier sur \(E=\{1,2,3,4\}\)</b>
+    <p>Parties à deux éléments : \(\{1,2\},\{1,3\},\{1,4\},\{2,3\},\{2,4\},\{3,4\}\) : \(6=\binom42\).</p>
+    <p>Parties à trois éléments : \(\{1,2,3\},\{1,2,4\},\{1,3,4\},\{2,3,4\}\) : \(4=\binom43\).</p>
+  </div>
+  <div class="widget" id="w-parts">
+    <div class="whead"><b>Générateur de parties</b><span>exécute <code>gen_parties_k</code></span></div>
+    <div class="wbody">
+      <div class="ctrl">
+        <label>\(n\)<input type="number" id="pt-n" value="4" min="1" max="8"></label>
+        <label>Taille \(k\)<select id="pt-k"><option>1</option><option selected>2</option><option>3</option><option>4</option></select></label>
+      </div>
+      <p class="verdict" id="pt-out"></p>
+      <div class="chips" id="pt-list"></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="ch2-8" data-t="Choisir la formule">
+  <h2><span class="no">8</span>Choisir la formule et réviser efficacement</h2>
+  <div class="box tip"><b>Le premier réflexe : définir ce que l'on compte</b>
+    <p>Préciser \(n\) (éléments disponibles), \(p\) (éléments ou positions à choisir), l'importance de l'ordre et la possibilité de répéter. Un dénombrement compte des objets, pas seulement des nombres.</p>
+  </div>
+  <div class="decision" role="group" aria-label="Arbre de décision">
+    <div class="dq">L'ordre des \(p\) éléments compte-t-il ?</div>
+    <div class="dcols">
+      <div class="dcol"><span class="dl">Oui</span>
+        <div class="dq">Répétitions autorisées ?</div>
+        <div class="dcols">
+          <div class="dcol"><span class="dl">Oui</span><div class="dr">\(n^p\)<small>liste avec répétitions</small></div></div>
+          <div class="dcol"><span class="dl">Non</span><div class="dr">\(A_n^p=\dfrac{n!}{(n-p)!}\)<small>arrangement</small></div><div class="dn">Si \(p=n\) : permutation \(n!\)</div></div>
+        </div>
+      </div>
+      <div class="dcol"><span class="dl">Non</span><div class="dn">Sans répétition : partie de \(p\) éléments parmi \(n\)</div><div class="dr">\(\dbinom np=\dfrac{n!}{p!\,(n-p)!}\)<small>combinaison</small></div></div>
+    </div>
+  </div>
+  <div class="box def"><b>Les quatre situations principales</b>
+    <ul>
+      <li><b>Liste avec répétition</b> : \(p\) positions, \(n\) possibilités par position ⇒ \(n^p\). <i>Exemple</i> : code de chiffres.</li>
+      <li><b>Arrangement</b> : \(p\) éléments distincts, rôles ou ordre distincts ⇒ \(A_n^p\). <i>Exemple</i> : trois prises affectées à douze positions.</li>
+      <li><b>Permutation</b> : ordonner les \(n\) éléments distincts ⇒ \(n!\). <i>Exemple</i> : ordre de passage de tous les élèves.</li>
+      <li><b>Combinaison</b> : choisir une partie de taille \(p\), sans ordre ⇒ \(\binom np\). <i>Exemple</i> : délégués ayant le même rôle.</li>
+    </ul>
+  </div>
+  <div class="box note"><b>Gérer les contraintes</b>
+    <ul>
+      <li>Une étape imposée : un seul choix, donc un facteur 1.</li>
+      <li>Des éléments imposés dans un groupe : les fixer, puis choisir les autres dans les éléments restants.</li>
+      <li>Une situation interdite : compter tout, puis retirer les cas interdits (comme Emma et Bastien).</li>
+      <li>Plusieurs cas : additionner seulement s'ils sont disjoints ; sinon, retirer le recouvrement.</li>
+      <li>Toutes les parties, de toute taille : \(2^n\), et non une seule combinaison \(\binom np\).</li>
+    </ul>
+  </div>
+  <div class="box thm"><b>Formules à mémoriser</b>
+    \[ 0!=1,\quad n!=n\,(n-1)!,\quad A_n^p=\frac{n!}{(n-p)!},\quad \binom np=\frac{n!}{p!\,(n-p)!} \]
+    \[ \binom np=\binom n{n-p},\qquad \binom np+\binom n{p+1}=\binom{n+1}{p+1}\ (p\lt n),\qquad \sum_{p=0}^n\binom np=2^n \]
+  </div>
+  <div class="box note"><b>Calculatrice, tableur et démonstrations</b>
+    <p>Pour un coefficient binomial, le cours mentionne les fonctions <code>nCr</code>, <i>combinaison</i> ou <i>binomial</i> ; en tableur français, \(\binom{25}{24}\) se calcule avec <code>=COMBIN(25;24)</code>.</p>
+    <p><b>Démonstrations au programme :</b> relation de Pascal et identité \(\sum\binom np=2^n\). <b>Justifications à maîtriser :</b> produit pour les arrangements et permutations ; division par \(p!\) pour les combinaisons ; deux choix par élément pour \(2^n\).</p>
+    <p class="small">« Dénombrement » est le nom général de l'activité : il englobe les principes additif et multiplicatif, les listes, les arrangements, les permutations et les combinaisons. Ce n'est pas une cinquième formule.</p>
+  </div>
+  <div class="quiz" data-quiz="q2"></div>
+</section>
+</article>
+
+    </div>
+  </div>
+</div>
+<script>
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+const typeset = el => { if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise(el ? [el] : undefined).catch(() => {}); };
+const CH = [
+  { id: "ch1", n: 1, color: "#5aa9ff" },
+  { id: "ch2", n: 2, color: "#ffb454" }
+];
+let done = store.get("mt-done", {});
+
+/* ---------- données des chapitres ---------- */
+CH.forEach(c => {
+  const el = document.getElementById(c.id);
+  c.title = el.dataset.title;
+  c.secs = $$(".sec", el).map(s => ({ id: s.id, t: s.dataset.t }));
+  c.el = el;
+});
+
+/* ---------- navigation ---------- */
+function renderNav(cur) {
+  let h = `<small>Menu</small><a href="#accueil" ${cur === "accueil" ? 'aria-current="page"' : ""}>Accueil</a><small style="margin-top:12px">Chapitres</small>`;
+  CH.forEach(c => {
+    const active = cur === c.id;
+    h += `<a class="ch" href="#${c.id}" ${active ? 'aria-current="page"' : ""}><i>${c.n}</i>${c.title}</a>`;
+    if (active) h += `<div class="subnav">` + c.secs.map((s, i) =>
+      `<a href="#${s.id}" class="${done[s.id] ? "done" : ""}">${i + 1}. ${s.t}<span class="d"></span></a>`).join("") + `</div>`;
+  });
+  $("#nav").innerHTML = h;
+}
+function renderCards() {
+  $("#cards").innerHTML = CH.map(c => {
+    const d = c.secs.filter(s => done[s.id]).length, p = Math.round(100 * d / c.secs.length);
+    return `<a class="card" href="#${c.id}" style="--cc:${c.color}"><span class="k">Chapitre ${c.n}</span><h2>${c.title}</h2>
+      <ul>${c.secs.map(s => `<li>${s.t}</li>`).join("")}</ul>
+      <div class="pt"><span>${d} / ${c.secs.length} sections revues</span><span>${p} %</span></div><div class="prog"><i style="width:${p}%"></i></div></a>`;
+  }).join("");
+}
+function show(token) {
+  token = token || "accueil";
+  let chap = CH.find(c => token === c.id || token.startsWith(c.id + "-"));
+  const view = chap ? chap.id : "accueil";
+  $("#accueil").hidden = view !== "accueil";
+  CH.forEach(c => { c.el.hidden = c.id !== view; });
+  document.documentElement.style.setProperty("--ac", chap ? chap.color : "#5aa9ff");
+  document.title = (chap ? chap.title : "Accueil") + " · Maths Terminale";
+  renderNav(view); renderCards();
+  $("#side").classList.remove("open"); $("#menu-btn").setAttribute("aria-expanded", "false");
+  const target = chap && token !== chap.id ? document.getElementById(token) : null;
+  if (target) target.scrollIntoView(); else window.scrollTo(0, 0);
+  if (view === "ch1") drawGeo();
+}
+window.addEventListener("hashchange", () => show(location.hash.slice(1)));
+$("#menu-btn").onclick = () => {
+  const o = $("#side").classList.toggle("open"); $("#menu-btn").setAttribute("aria-expanded", o);
+};
+
+/* ---------- bouton « revu » et dépliage des preuves ---------- */
+CH.forEach(c => {
+  $$(".sec", c.el).forEach(s => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "done-btn"; b.setAttribute("aria-pressed", !!done[s.id]);
+    b.textContent = done[s.id] ? "Revue" : "Marquer comme revue";
+    b.onclick = () => {
+      done[s.id] = !done[s.id]; if (!done[s.id]) delete done[s.id];
+      store.set("mt-done", done);
+      b.setAttribute("aria-pressed", !!done[s.id]); b.textContent = done[s.id] ? "Revue" : "Marquer comme revue";
+      renderNav(c.id); renderCards();
+    };
+    $("h2", s).appendChild(b);
+  });
+  const t = document.createElement("div"); t.className = "tools";
+  t.innerHTML = `<button class="btn" type="button" data-a="open">Déplier les démonstrations</button><button class="btn" type="button" data-a="close">Replier</button>`;
+  t.onclick = e => { const a = e.target.dataset.a; if (a) $$("details.proof", c.el).forEach(d => d.open = a === "open"); };
+  $(".chead", c.el).appendChild(t);
+});
+
+/* ---------- explorateur de suite géométrique ---------- */
+function drawGeo() {
+  const cv = $("#g-cv"); if (!cv) return;
+  const u0 = +$("#g-u0").value, q = +$("#g-q").value;
+  $("#g-u0o").textContent = u0; $("#g-qo").textContent = q.toFixed(2);
+  const ctx = cv.getContext("2d"), W = cv.width, H = cv.height;
+  const css = getComputedStyle(document.documentElement);
+  const col = n => css.getPropertyValue(n).trim();
+  ctx.clearRect(0, 0, W, H);
+  const N = 20, terms = [];
+  for (let n = 0; n <= N; n++) terms.push(u0 * Math.pow(q, n));
+  const m = Math.max(1, Math.min(12, Math.max(...terms.map(Math.abs))));
+  const X = n => 50 + n * (W - 80) / N, Y = v => H / 2 - Math.max(-1.15 * m, Math.min(1.15 * m, v)) * (H / 2 - 22) / (1.15 * m);
+  ctx.font = "12px IBM Plex Mono, monospace"; ctx.fillStyle = col("--muted"); ctx.strokeStyle = col("--line2"); ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(40, H / 2); ctx.lineTo(W - 10, H / 2); ctx.stroke();
+  for (let n = 0; n <= N; n += 5) ctx.fillText(n, X(n) - 4, H / 2 + 16);
+  ctx.fillText("0", 24, H / 2 + 4);
+  ctx.fillText(m.toFixed(m < 10 ? 1 : 0), 14, Y(m) + 4); ctx.fillText("-" + m.toFixed(m < 10 ? 1 : 0), 6, Y(-m) + 4);
+  ctx.strokeStyle = col("--ac"); ctx.globalAlpha = .35; ctx.beginPath();
+  terms.forEach((v, n) => n ? ctx.lineTo(X(n), Y(v)) : ctx.moveTo(X(n), Y(v))); ctx.stroke(); ctx.globalAlpha = 1;
+  terms.forEach((v, n) => {
+    ctx.fillStyle = Math.abs(v) > 1.15 * m ? col("--warn") : col("--ac");
+    ctx.beginPath(); ctx.arc(X(n), Y(v), 4.5, 0, 7); ctx.fill();
+  });
+  let v;
+  if (u0 === 0) v = "Tous les termes valent 0 : la suite converge vers <b>0</b>.";
+  else if (Math.abs(q) < 1) v = `\\(|q|\\lt1\\) : \\(u_n\\to\\) <b>0</b>${q === 0 ? " (les termes valent 0 dès \\(n=1\\))" : q < 0 ? ", en alternant les signes" : ""}.`;
+  else if (Math.abs(q - 1) < 1e-9) v = `\\(q=1\\) : suite constante, \\(u_n\\to\\) <b>${u0}</b>.`;
+  else if (q > 1) v = `\\(q\\gt1\\) et \\(u_0${u0 > 0 ? "\\gt" : "\\lt"}0\\) : \\(u_n\\to\\) <b>${u0 > 0 ? "+∞" : "−∞"}</b>.`;
+  else if (Math.abs(q + 1) < 1e-9) v = `\\(q=-1\\) : la suite alterne entre \\(${u0}\\) et \\(${-u0}\\), <b>pas de limite</b>.`;
+  else v = `\\(q\\lt-1\\) : les rangs pairs et impairs divergent en sens opposés, <b>pas de limite</b>.`;
+  const el = $("#g-v"); if (el.dataset.v !== v) { el.dataset.v = v; el.innerHTML = v; typeset(el); }
+}
+["g-u0", "g-q"].forEach(id => $("#" + id).addEventListener("input", drawGeo));
+
+/* ---------- seuil ---------- */
+function seuil() {
+  const u0 = +$("#s-u0").value, q = +$("#s-q").value, A = +$("#s-a").value;
+  const out = $("#s-out"), chips = $("#s-terms"), MAXN = 5000;
+  let n = 0, u = u0; const t = [u];
+  while (u < A && n < MAXN && isFinite(u)) { n++; u = u * q; if (t.length < 14) t.push(u); }
+  const fmt = x => Math.abs(x) >= 1e9 ? x.toExponential(2) : String(+x.toFixed(6));
+  if (u >= A) out.innerHTML = `Premier rang tel que \\(u_n\\ge ${A}\\) : <b>n = ${n}</b> (\\(u_{${n}}=${fmt(u)}\\)).`;
+  else out.innerHTML = `Aucun terme n'atteint ${A} avant \\(n=${MAXN}\\) : la suite ne tend pas vers \\(+\\infty\\).`;
+  chips.innerHTML = t.map((x, i) => `<span>u${i} = ${fmt(x)}</span>`).join("") + (n >= t.length ? "<span>…</span>" : "");
+  typeset(out);
+}
+["s-u0", "s-q", "s-a"].forEach(id => $("#" + id).addEventListener("input", seuil));
+
+/* ---------- calculatrice de dénombrement ---------- */
+function big(n) { let f = 1n; for (let i = 2n; i <= BigInt(n); i++) f *= i; return f; }
+function fmtBig(b) {
+  const s = b.toString();
+  if (s.length <= 30) return s.replace(/\B(?=(\d{3})+(?!\d))/g, "\u202f");
+  return `≈ ${s[0]},${s.slice(1, 5)} × 10^${s.length - 1} (${s.length} chiffres)`;
+}
+function comb() {
+  const n = Math.max(0, Math.min(200, parseInt($("#c-n").value) || 0)), p = Math.max(0, Math.min(200, parseInt($("#c-p").value) || 0));
+  const pw = BigInt(n) ** BigInt(p);
+  let A = 0n, C = 0n;
+  if (p <= n) { A = 1n; for (let i = 0; i < p; i++) A *= BigInt(n - i); C = A / big(p); }
+  const rows = [
+    ["Liste avec répétitions  n^p", pw], ["Arrangements  A(n,p)", A], ["Combinaisons  C(n,p)", C],
+    ["Permutations  n!", big(n)], ["Parties de E  2^n", 2n ** BigInt(n)]
+  ];
+  $("#c-out").innerHTML = rows.map(([l, v]) => `<div class="res"><span>${l}</span><b>${fmtBig(v)}</b></div>`).join("") +
+    (p > n ? `<div class="res"><span>Remarque</span><b style="font-size:13px;font-family:var(--ui);color:var(--warn)">p &gt; n : A(n,p) = C(n,p) = 0</b></div>` : "");
+}
+["c-n", "c-p"].forEach(id => $("#" + id).addEventListener("input", comb));
+
+/* ---------- triangle de Pascal ---------- */
+function pascal(sel) {
+  const N = +$("#pa-n").value; $("#pa-o").textContent = N;
+  const T = []; for (let r = 0; r < N; r++) { T[r] = []; for (let c = 0; c <= r; c++) T[r][c] = c === 0 || c === r ? 1 : T[r - 1][c - 1] + T[r - 1][c]; }
+  let h = "";
+  for (let r = 0; r < N; r++) {
+    h += `<div class="prow">`;
+    for (let c = 0; c <= r; c++) {
+      let cls = "";
+      if (sel && sel[0] === r && sel[1] === c) cls = "s";
+      else if (sel && sel[0] - 1 === r && (sel[1] === c || sel[1] - 1 === c) && sel[1] > 0 && sel[1] < sel[0]) cls = "p";
+      h += `<button type="button" class="${cls}" data-r="${r}" data-c="${c}" aria-label="n=${r}, p=${c}, valeur ${T[r][c]}">${T[r][c]}</button>`;
+    }
+    h += `<em>= 2^${r}</em></div>`;
+  }
+  $("#pa-tri").innerHTML = h;
+  const msg = $("#pa-msg");
+  if (sel) {
+    const [r, c] = sel;
+    msg.innerHTML = c > 0 && c < r
+      ? `\\(\\binom{${r}}{${c}}=\\binom{${r - 1}}{${c - 1}}+\\binom{${r - 1}}{${c}}=${T[r - 1][c - 1]}+${T[r - 1][c]}=${T[r][c]}\\)`
+      : `\\(\\binom{${r}}{${c}}=1\\) : les bords du triangle valent 1.`;
+    typeset(msg);
+  }
+}
+$("#pa-n").addEventListener("input", () => pascal(null));
+$("#pa-tri").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (b) pascal([+b.dataset.r, +b.dataset.c]); });
+
+/* ---------- générateur de parties ---------- */
+function parts() {
+  const n = Math.max(1, Math.min(8, parseInt($("#pt-n").value) || 1)); const k = Math.min(+$("#pt-k").value, n);
+  const L = [];
+  (function go(start, cur) { if (cur.length === k) { L.push([...cur]); return; }
+    for (let i = start; i <= n; i++) { cur.push(i); go(i + 1, cur); cur.pop(); } })(1, []);
+  $("#pt-out").innerHTML = `Parties à ${k} élément${k > 1 ? "s" : ""} de \\(\\{1,\\dots,${n}\\}\\) : <b>${L.length}</b> \\(=\\binom{${n}}{${k}}\\).`;
+  $("#pt-list").innerHTML = L.map(p => `<span>{${p.join(", ")}}</span>`).join("");
+  typeset($("#pt-out"));
+}
+["pt-n", "pt-k"].forEach(id => $("#" + id).addEventListener("input", parts));
+
+/* ---------- quiz ---------- */
+const QUIZ = {
+  q1: [
+    ["Une suite croissante et non majorée…", ["tend vers \\(+\\infty\\)", "converge", "est constante", "n'a pas de limite"], 0, "Pour tout seuil \\(A\\), un rang \\(N\\) tel que \\(u_N\\gt A\\) existe, et la croissance garde \\(u_n\\gt A\\) ensuite."],
+    ["Que vaut \\(\\lim \\dfrac{5n^2+4}{4n^2+3n}\\) ?", ["\\(+\\infty\\)", "\\(0\\)", "\\(\\tfrac54\\)", "\\(\\tfrac45\\)"], 2, "On factorise par \\(n^2\\) : \\(\\dfrac{5+4/n^2}{4+3/n}\\to\\dfrac54\\)."],
+    ["La suite \\((-2)^n/3\\)…", ["tend vers \\(0\\)", "tend vers \\(-\\infty\\)", "n'a pas de limite", "tend vers \\(+\\infty\\)"], 2, "\\(q=-2\\le-1\\) : rangs pairs et impairs divergent en sens opposés."],
+    ["\\(2^n-3^n\\) tend vers…", ["\\(0\\)", "\\(-\\infty\\)", "\\(+\\infty\\)", "\\(-1\\)"], 1, "On factorise par \\(3^n\\) : \\(3^n\\left[(2/3)^n-1\\right]\\) avec crochet \\(\\to-1\\) et \\(3^n\\to+\\infty\\)."],
+    ["\\(\\sqrt{n+2}-\\sqrt n\\) tend vers…", ["\\(+\\infty\\)", "\\(0\\)", "\\(2\\)", "\\(1\\)"], 1, "Avec le conjugué : \\(\\dfrac2{\\sqrt{n+2}+\\sqrt n}\\to0\\)."],
+    ["Laquelle est une forme indéterminée ?", ["\\(+\\infty+\\infty\\)", "\\(+\\infty\\times(-\\infty)\\)", "\\(+\\infty-\\infty\\)", "\\(\\tfrac3{+\\infty}\\)"], 2, "Les quatre formes indéterminées : \\(\\infty-\\infty\\), \\(0\\times\\infty\\), \\(\\tfrac\\infty\\infty\\), \\(\\tfrac00\\)."]
+  ],
+  q2: [
+    ["3 entrées, 4 plats, 2 desserts : combien de menus ?", ["9", "24", "12", "14"], 1, "Principe multiplicatif : \\(3\\times4\\times2=24\\)."],
+    ["Combien d'arrangements de 3 lettres parmi 5 ?", ["10", "125", "60", "120"], 2, "\\(A_5^3=5\\times4\\times3=60\\)."],
+    ["Choisir 3 délégués de même rôle parmi 10 élèves :", ["\\(\\binom{10}3=120\\)", "\\(A_{10}^3=720\\)", "\\(10^3\\)", "\\(3!\\)"], 0, "Sans ordre ni répétition : combinaison, \\(\\dfrac{10\\times9\\times8}{3!}=120\\)."],
+    ["Combien de parties possède un ensemble à 5 éléments ?", ["25", "10", "120", "32"], 3, "Deux choix par élément : \\(2^5=32\\)."],
+    ["\\(\\binom72+\\binom73=\\)", ["\\(\\binom 95\\)", "\\(\\binom83\\)", "\\(\\binom{14}5\\)", "\\(\\binom 7 5\\)"], 1, "Relation de Pascal avec \\(n=7\\), \\(p=2\\) : \\(\\binom72+\\binom73=\\binom83=56\\)."],
+    ["\\(\\binom{25}{24}=\\)", ["1", "24", "25", "600"], 2, "Symétrie : \\(\\binom{25}{24}=\\binom{25}1=25\\)."]
+  ]
+};
+$$(".quiz").forEach(box => {
+  const qs = QUIZ[box.dataset.quiz]; let score = 0, answered = 0;
+  box.innerHTML = `<h3>Se tester</h3>` + qs.map((q, i) =>
+    `<div class="qq" data-i="${i}"><p>${i + 1}. ${q[0]}</p><div class="opts">${q[1].map((o, j) => `<button type="button" class="opt" data-j="${j}">${o}</button>`).join("")}</div><p class="why" hidden>${q[3]}</p></div>`).join("") +
+    `<div class="score" aria-live="polite">Score : 0 / ${qs.length}</div>`;
+  box.addEventListener("click", e => {
+    const b = e.target.closest(".opt"); if (!b) return;
+    const qq = b.closest(".qq"), q = qs[+qq.dataset.i];
+    if (qq.dataset.d) return; qq.dataset.d = 1; answered++;
+    const ok = +b.dataset.j === q[2]; if (ok) score++;
+    $$(".opt", qq).forEach(o => { o.disabled = true; if (+o.dataset.j === q[2]) o.classList.add("good"); });
+    if (!ok) b.classList.add("bad");
+    $(".why", qq).hidden = false; $(".score", box).textContent = `Score : ${score} / ${qs.length}` + (answered === qs.length ? " — terminé" : "");
+  });
+});
+
+/* ---------- démarrage ---------- */
+comb(); seuil(); parts(); pascal(null);
+show(location.hash.slice(1));
+
+</script>

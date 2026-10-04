@@ -1,0 +1,357 @@
+<article class="chapter" id="ch2" hidden data-title="Combinatoire et dénombrement">
+<header class="chead">
+  <span class="kicker">Chapitre 2</span>
+  <h1>Combinatoire et dénombrement</h1>
+  <p class="lede">Ensembles finis, principes additif et multiplicatif, listes, arrangements, permutations, combinaisons, coefficients binomiaux et algorithmes.</p>
+</header>
+
+<section class="sec" id="ch2-1" data-t="Ensembles finis">
+  <h2><span class="no">1</span>Ensembles finis</h2>
+  <div class="box note"><b>Vocabulaire et notations</b>
+    <p>Un <i>ensemble fini</i> contient un nombre fini d'éléments. Son <i>cardinal</i> est ce nombre : \(\operatorname{card}(E)\), \(|E|\) ou \(\#E\). <i>Dénombrer</i>, c'est déterminer un cardinal.</p>
+    <p>\(\varnothing\) est l'ensemble vide : \(|\varnothing|=0\). \(x\in E\) : \(x\) appartient à \(E\) ; \(x\notin E\) : le contraire. Dans un ensemble, l'ordre ne compte pas et les doublons ne sont pas conservés.</p>
+  </div>
+  <div class="two">
+    <div class="box def"><b>Inclusion et complémentaire</b>
+      <p>\(A\subseteq E\) : tout élément de \(A\) est dans \(E\) (\(A\) est une <i>partie</i> ou un <i>sous-ensemble</i> de \(E\)). Alors \(|A|\le|E|\).</p>
+      <p>Complémentaire de \(A\) dans \(E\) : \(\overline A=E\setminus A=\{x\in E:\ x\notin A\}\). Il dépend de l'ensemble de référence \(E\).</p></div>
+    <div class="box def"><b>Intersection et union</b>
+      <p>\(A\cap B=\{x:\ x\in A\text{ et }x\in B\}\).</p>
+      <p>\(A\cup B=\{x:\ x\in A\text{ ou }x\in B\}\). Le « ou » inclut les éléments présents dans les deux ensembles.</p>
+      <p>\(A\) et \(B\) sont <i>disjoints</i> si \(A\cap B=\varnothing\).</p></div>
+  </div>
+  <div class="box ex"><b>Exemple du cours : opérations sur deux ensembles</b>
+    <p>\(A=\{1,3,8,4\}\) et \(B=\{4,6,5,1,3\}\) ; donc \(|A|=4\) et \(|B|=5\).</p>
+    <ol>
+      <li>Un ensemble contenant \(A\) : \(C=\{1,3,8,4,5\}\) convient, avec \(A\subseteq C\).</li>
+      <li>Une partie non vide de \(A\), distincte de \(A\) : \(D=\{1,3,4\}\).</li>
+      <li>Un élément de \(B\) absent de \(A\) : \(6\) (ou \(5\)).</li>
+      <li>Intersection : \(A\cap B=\{1,3,4\}\), donc \(|A\cap B|=3\).</li>
+      <li>Union : \(A\cup B=\{1,3,4,5,6,8\}\), donc \(|A\cup B|=6\).</li>
+      <li>Complémentaire de \(A\) dans \(A\cup B\) : \((A\cup B)\setminus A=\{5,6\}\).</li>
+    </ol>
+  </div>
+  <figure class="fig">
+    <svg viewBox="0 0 420 190" role="img" aria-label="Diagramme de Venn de A et B">
+      <rect class="vbox" x="10" y="10" width="400" height="170" rx="6"/><text class="lb2" x="20" y="30">E = A ∪ B</text>
+      <circle class="va" cx="165" cy="100" r="68"/><circle class="vb" cx="255" cy="100" r="68"/>
+      <text class="lb2 a" x="110" y="56">A</text><text class="lb2 b" x="300" y="56">B</text>
+      <text class="vt" x="125" y="105">8</text><text class="vt" x="210" y="105">1, 3, 4</text><text class="vt" x="290" y="105">5, 6</text>
+    </svg>
+    <figcaption>La zone centrale est l'intersection. Chaque élément est placé une seule fois : \(|A\cup B|=1+3+2=6\).</figcaption>
+  </figure>
+  <div class="box warn"><b>Appartenance ≠ inclusion</b>
+    <p>\(1\in A\), mais \(\{1\}\subseteq A\). De même, \(\varnothing\subseteq E\) pour tout \(E\) : l'ensemble vide est une partie, pas nécessairement un élément de \(E\).</p>
+  </div>
+</section>
+
+<section class="sec" id="ch2-2" data-t="Addition et multiplication">
+  <h2><span class="no">2</span>Les principes de dénombrement</h2>
+  <div class="box thm"><b>Principe additif : des cas disjoints</b>
+    <p>Si \(A\cap B=\varnothing\), alors \(|A\cup B|=|A|+|B|\). On additionne les nombres de possibilités lorsque l'on sépare en cas incompatibles. Pour plusieurs ensembles deux à deux disjoints, on additionne tous les cardinaux.</p>
+    <p><b>Complémentaire</b> : \(|\overline A|=|E|-|A|\), car \(E=A\cup\overline A\) et \(A\cap\overline A=\varnothing\).</p>
+    <p><b>Deux ensembles qui se recouvrent</b> : \(|A\cup B|=|A|+|B|-|A\cap B|\). On retire l'intersection comptée deux fois.</p>
+  </div>
+  <div class="box ex"><b>Exemple du cours : latin et théâtre</b>
+    <p>16 élèves font latin, 14 théâtre, 5 les deux, 8 aucune option. Latin seul : \(16-5=11\) ; théâtre seul : \(14-5=9\).</p>
+    <p>\(|L\cup T|=16+14-5=25\). Il y a donc \(25+8=33\) élèves.</p>
+    <p class="small">Autre exemple : deux ensembles disjoints de 4 et 3 éléments ont une union de 7 éléments.</p>
+  </div>
+  <figure class="fig">
+    <svg viewBox="0 0 420 190" role="img" aria-label="Diagramme latin théâtre">
+      <rect class="vbox" x="10" y="10" width="400" height="170" rx="6"/>
+      <circle class="va" cx="160" cy="95" r="62"/><circle class="vb" cx="240" cy="95" r="62"/>
+      <text class="lb2 a" x="100" y="40">Latin</text><text class="lb2 b" x="270" y="40">Théâtre</text>
+      <text class="vt" x="125" y="100">11</text><text class="vt" x="200" y="100">5</text><text class="vt" x="268" y="100">9</text>
+      <text class="vt" x="330" y="160">8 (aucune)</text>
+    </svg>
+  </figure>
+  <div class="box thm"><b>Principe multiplicatif : des choix successifs</b>
+    <p>Si une construction comporte \(k\) étapes et, pour chaque choix précédent, offre \(n_i\) possibilités à l'étape \(i\), le total est \(n_1n_2\cdots n_k\).</p>
+    <p><b>Produit cartésien</b> : \(E\times F=\{(x,y):\ x\in E,\ y\in F\}\) et \(|E\times F|=|E|\,|F|\).</p>
+    <p>Un <i>\(k\)-uplet</i> de \(E\) est une liste ordonnée de \(k\) éléments de \(E\), avec répétitions possibles. L'ensemble des \(k\)-uplets est \(E^k=E\times\dots\times E\) :  \(|E|=n\Rightarrow|E^k|=n^k\).</p>
+  </div>
+  <div class="box ex"><b>Exemples du cours</b>
+    <p><i>Menus</i> : 3 entrées, 4 plats, 2 desserts ⇒ \(3\times4\times2=24\) menus. Si le dessert est imposé : \(3\times4\times1=12\).</p>
+    <p><i>Deux lancers de dé</i> : \(E=\{1,\dots,6\}\) ; les résultats sont des couples ordonnés de \(E^2\) ; il y a \(6^2=36\) issues. \((1,2)\ne(2,1)\), tandis que \((5,5)\) est autorisé.</p>
+    <p><i>Somme multiple de 3</i> : les sommes 3, 6, 9, 12 correspondent à 2, 5, 4, 1 couples, soit 12 issues favorables. Avec des lancers indépendants et un dé équilibré : \(P=\tfrac{12}{36}=\tfrac13\).</p>
+  </div>
+  <div class="box tip"><b>Ajouter ou multiplier ?</b>
+    <p>Ajouter pour des <i>cas disjoints</i> ; multiplier pour les <i>étapes d'une même construction</i>. Le quotient « favorables / total » exige l'équiprobabilité des issues.</p>
+  </div>
+</section>
+
+<section class="sec" id="ch2-3" data-t="Listes et arrangements">
+  <h2><span class="no">3</span>Listes avec répétitions et arrangements</h2>
+  <div class="box thm"><b>Avec répétitions : \(n^p\) possibilités</b>
+    <p>Choisir une liste de \(p\) éléments d'un ensemble à \(n\) éléments, avec répétitions autorisées, donne \(n\) choix à chacune des \(p\) positions : \(n^p\). Modèle : tirages successifs <i>avec remise</i>, codes dont les caractères peuvent se répéter.</p>
+  </div>
+  <div class="box ex"><b>Codes du cours</b>
+    <p>Deux lettres parmi 26, puis dix chiffres : \(26^2\times10^{10}=6\,760\,000\,000\,000\) (6 760 milliards de codes).</p>
+    <p>Une lettre parmi A, B, puis quatre chiffres : \(2\times10^4=20\,000\).</p>
+    <p>Deux lettres parmi A, B, puis neuf chiffres : \(2^2\times10^9=4\,000\,000\,000\). Les zéros initiaux sont autorisés, car ce sont des codes.</p>
+  </div>
+  <div class="box def"><b>Factorielle</b>
+    <p>Pour \(n\in\mathbb N^*\) : \(n!=1\times2\times\dots\times n\). Par convention, \(0!=1\).</p>
+    \[ 1!=1,\quad 3!=6,\quad 5!=120,\quad n!=n\,(n-1)!\ (n\ge1). \]
+    <p class="small">Pour simplifier un quotient de factorielles, développer seulement les facteurs qui ne se simplifient pas : \(\dfrac{12!}{9!}=12\times11\times10\).</p>
+  </div>
+  <div class="box thm"><b>Arrangement : liste ordonnée sans répétition</b>
+    <p>Un <i>arrangement</i> de \(p\) éléments de \(E\) est un \(p\)-uplet dont les éléments sont deux à deux distincts, avec \(0\le p\le n=|E|\). L'ordre compte, les éléments ne se répètent pas. Modèle : tirages successifs <i>sans remise</i>, classement, rôles distincts.</p>
+    \[ A_n^p=n(n-1)\cdots(n-p+1)=\frac{n!}{(n-p)!}. \]
+    <p class="small">Pour \(p=0\), une seule liste vide : \(A_n^0=1\). Pour \(p\gt n\), aucun arrangement sans répétition n'est possible.</p>
+  </div>
+  <details class="box proof"><summary>Justification de la formule</summary>
+    <p>La première position offre \(n\) choix. La deuxième en offre \(n-1\), car un élément est déjà utilisé. À la \(p\)-ième, il reste \(n-p+1\) choix. Le principe multiplicatif donne le produit annoncé ; la formule factorielle résulte de la simplification.</p>
+  </details>
+  <div class="box ex"><b>Exemples du cours</b>
+    <p>Dans \(E=\{a,b,o,p,r\}\), \((b,o,a)\) et \((r,a,p)\) sont des arrangements à 3 éléments. \((p,a,r)\ne(r,a,p)\) : l'ordre les distingue. \((b,a,r,b,a,r)\) n'en est pas un, car il répète des éléments.</p>
+    <p>Arrangements de 3 lettres parmi 5 : \(A_5^3=5\times4\times3=60\).</p>
+    <p>Branchement de trois prises distinctes sur douze positions : \(A_{12}^3=\dfrac{12!}{9!}=12\times11\times10=1\,320\). Une seule affectation étant correcte, la probabilité de retrouver le bon branchement est \(\tfrac1{1320}\).</p>
+  </div>
+</section>
+
+<section class="sec" id="ch2-4" data-t="Permutations et parties">
+  <h2><span class="no">4</span>Permutations et parties d'un ensemble</h2>
+  <div class="box thm"><b>Permutation : ordonner tous les éléments distincts</b>
+    <p>Une permutation d'un ensemble \(E\) à \(n\) éléments est un arrangement de ses \(n\) éléments : chaque élément est utilisé exactement une fois.</p>
+    \[ \text{Nombre de permutations}=A_n^n=\frac{n!}{0!}=n!. \]
+    <p class="small">Justification : \(n\) choix pour la première position, \(n-1\) pour la deuxième, jusqu'à 1 pour la dernière.</p>
+  </div>
+  <div class="box ex"><b>Exemples du cours</b>
+    <p>Trois personnes sur trois places d'un banc : \(3!=6\) placements. Ordre de passage de cinq élèves à l'oral : \(5!=120\). Si seulement trois passent : \(A_5^3=60\) (c'est alors un arrangement).</p>
+    <p>Dans \(E=\{1,2,3,4,5\}\), \((1,3,2,5,4)\) et \((5,1,2,3,4)\) sont des permutations.</p>
+  </div>
+  <figure class="fig">
+    <svg viewBox="0 0 420 230" role="img" aria-label="Arbre des anagrammes de BAC">
+      <g class="tr"><line x1="40" y1="115" x2="130" y2="40"/><line x1="40" y1="115" x2="130" y2="115"/><line x1="40" y1="115" x2="130" y2="190"/>
+      <line x1="150" y1="40" x2="250" y2="22"/><line x1="150" y1="40" x2="250" y2="58"/>
+      <line x1="150" y1="115" x2="250" y2="97"/><line x1="150" y1="115" x2="250" y2="133"/>
+      <line x1="150" y1="190" x2="250" y2="172"/><line x1="150" y1="190" x2="250" y2="208"/></g>
+      <text class="lb2" x="4" y="119">Départ</text>
+      <text class="vt a" x="140" y="45">B</text><text class="vt a" x="140" y="120">A</text><text class="vt a" x="140" y="195">C</text>
+      <text class="vt" x="262" y="26">BAC</text><text class="vt" x="262" y="62">BCA</text>
+      <text class="vt" x="262" y="101">ABC</text><text class="vt" x="262" y="137">ACB</text>
+      <text class="vt" x="262" y="176">CBA</text><text class="vt" x="262" y="212">CAB</text>
+    </svg>
+    <figcaption>Anagrammes de « BAC » : lettres distinctes, \(3\times2\times1=6\) anagrammes.</figcaption>
+  </figure>
+  <div class="box def"><b>Ensemble des parties \(\mathcal P(E)\)</b>
+    <p>Une partie de \(E\) est un sous-ensemble de \(E\). L'ensemble de toutes les parties est \(\mathcal P(E)\) : c'est un ensemble d'ensembles. Pour \(E=\{a,b,c\}\) :</p>
+    \[ \mathcal P(E)=\{\varnothing,\{a\},\{b\},\{c\},\{a,b\},\{a,c\},\{b,c\},\{a,b,c\}\}. \]
+    <p>Il y a 8 parties. On a toujours \(\varnothing\in\mathcal P(E)\) et \(E\in\mathcal P(E)\).</p>
+  </div>
+  <div class="box thm"><b>Propriété : \(|\mathcal P(E)|=2^n\)</b></div>
+  <details class="box proof"><summary>Démonstration</summary>
+    <p>Pour construire une partie, chaque élément de \(E\) donne deux choix : le prendre ou ne pas le prendre. Ces \(n\) décisions donnent, par multiplication, \(|\mathcal P(E)|=\underbrace{2\times\dots\times2}_{n\text{ facteurs}}=2^n\).</p>
+    <p>On peut coder chaque partie par un \(n\)-uplet de 0 et de 1 : 1 si l'élément est choisi, 0 sinon. Par exemple, pour \((a,b,c)\), \((1,0,1)\) code \(\{a,c\}\).</p>
+  </details>
+  <div class="box warn"><b>Éléments distincts seulement</b>
+    <p>Les formules de permutation concernent des éléments distincts. Un mot contenant des lettres répétées demande un traitement supplémentaire : compter systématiquement \(n!\) ferait des doublons.</p>
+  </div>
+</section>
+
+<section class="sec" id="ch2-5" data-t="Combinaisons">
+  <h2><span class="no">5</span>Combinaisons d'un ensemble fini</h2>
+  <div class="box thm"><b>Définition et formule</b>
+    <p>Une <i>combinaison</i> de \(p\) éléments d'un ensemble \(E\) à \(n\) éléments est une <b>partie de cardinal \(p\)</b>, avec \(0\le p\le n\). Ni ordre, ni répétition. Notations : \(\binom np\) ou \(C_n^p\).</p>
+    \[ \binom np=\frac{n!}{p!\,(n-p)!}=\frac{A_n^p}{p!}. \]
+    <p class="small">\(\{1,2,3\}\) est une combinaison à trois éléments de \(\{1,2,3,4,5\}\). \(\{1,2\}=\{2,1\}\) : inverser l'ordre ne crée pas un nouveau choix.</p>
+  </div>
+  <div class="box note"><b>Pourquoi diviser par \(p!\) ?</b>
+    <p>Les arrangements comptent les choix ordonnés. Une même partie de \(p\) éléments distincts peut être ordonnée de \(p!\) façons. Chaque partie est donc comptée \(p!\) fois parmi les \(A_n^p\) arrangements : \(A_n^p=\binom np\,p!\), d'où \(\binom np=\dfrac{A_n^p}{p!}\).</p>
+    <div class="perm"><div class="pp">{a, b, c}<small>une partie</small></div><span>→</span><div class="pl">abc · acb · bac · bca · cab · cba<small>3! = 6 listes</small></div></div>
+  </div>
+  <div class="box def"><b>Cas particuliers à connaître</b>
+    \[ \binom n0=1,\qquad \binom nn=1,\qquad \binom n1=n\ (n\ge1),\qquad \binom n{n-1}=n\ (n\ge1). \]
+    <p>Une seule partie vide, une seule partie égale à \(E\), \(n\) parties à un élément. Si l'on doit compter des parties de taille \(p\gt n\), le nombre est 0.</p>
+  </div>
+
+  <div class="widget" id="w-comb">
+    <div class="whead"><b>Calculatrice de dénombrement</b><span>\(n^p\), \(A_n^p\), \(\binom np\), \(n!\), \(2^n\)</span></div>
+    <div class="wbody">
+      <div class="ctrl">
+        <label>\(n\)<input type="number" id="c-n" value="34" min="0" max="200"></label>
+        <label>\(p\)<input type="number" id="c-p" value="4" min="0" max="200"></label>
+      </div>
+      <div class="results" id="c-out"></div>
+    </div>
+  </div>
+
+  <div class="box ex"><b>Exemple du cours : élire quatre délégués</b>
+    <p>Une classe compte 18 filles et 16 garçons, soit 34 élèves. Les quatre élus ont le même rôle : aucun ordre.</p>
+    <p><b>a.</b> Sans contrainte : \(\dbinom{34}4=\dfrac{34!}{4!\,30!}=\dfrac{34\times33\times32\times31}{4\times3\times2\times1}=46\,376\).</p>
+    <p><b>b.</b> Emma et Bastien ne peuvent pas être élus ensemble : compter les cas interdits puis les retirer. Si tous deux sont élus, il reste deux élèves à choisir parmi les 32 autres : \(\dbinom{32}2=\dfrac{32\times31}2=496\). Le nombre d'élections autorisées est \(\dbinom{34}4-\dbinom{32}2=46\,376-496=45\,880\).</p>
+  </div>
+  <div class="box note"><b>Distinguer les situations proches</b>
+    <ul>
+      <li>Choisir un groupe de trois élèves parmi cinq : \(\binom53=10\).</li>
+      <li>Choisir trois élèves et fixer leur ordre de passage : \(A_5^3=60\).</li>
+      <li>Faire passer les cinq dans un ordre déterminé : \(5!=120\).</li>
+    </ul>
+  </div>
+  <div class="box warn"><b>« Choisir \(p\) parmi \(n\) » ne suffit pas</b>
+    <p>Vérifier si les places ou les rôles sont distincts. Si chacun reçoit un rôle différent, l'ordre compte et l'on utilise un arrangement.</p>
+  </div>
+</section>
+
+<section class="sec" id="ch2-6" data-t="Coefficients binomiaux et Pascal">
+  <h2><span class="no">6</span>Coefficients binomiaux et triangle de Pascal</h2>
+  <p class="small">Le nombre \(\binom np\) est appelé coefficient binomial. La loi binomiale sera étudiée dans un autre chapitre.</p>
+  <div class="box thm"><b>Symétrie</b>
+    <p>Pour \(0\le p\le n\) : \(\dbinom np=\dbinom n{n-p}\). Choisir les \(p\) éléments retenus revient à choisir les \(n-p\) éléments exclus ; la formule factorielle est également inchangée.</p>
+    <p class="small">Exemple : \(\binom{25}{24}=\binom{25}{1}=25\).</p>
+  </div>
+  <div class="box thm"><b>Relation de Pascal</b> <span class="tag">démonstration au programme</span>
+    <p>Pour \(n\ge1\) et \(0\le p\lt n\) : \[ \binom np+\binom n{p+1}=\binom{n+1}{p+1}. \]</p>
+  </div>
+  <details class="box proof"><summary>Preuve algébrique</summary>
+    <p>Les factorielles ci-dessous sont définies car \(p\lt n\) :</p>
+    \[\begin{aligned}
+    \binom np+\binom n{p+1}&=\frac{n!}{p!\,(n-p)!}+\frac{n!}{(p+1)!\,(n-p-1)!}\\
+    &=\frac{n!}{p!\,(n-p-1)!}\left(\frac1{n-p}+\frac1{p+1}\right)\\
+    &=\frac{n!}{p!\,(n-p-1)!}\cdot\frac{n+1}{(n-p)(p+1)}\\
+    &=\frac{(n+1)!}{(p+1)!\,(n-p)!}=\binom{n+1}{p+1}.
+    \end{aligned}\]
+    <p class="small">On utilise \((n-p)!=(n-p)(n-p-1)!\) et \((p+1)!=(p+1)\,p!\).</p>
+  </details>
+
+  <div class="widget" id="w-pascal">
+    <div class="whead"><b>Triangle de Pascal interactif</b><span>cliquez sur un coefficient</span></div>
+    <div class="wbody">
+      <div class="ctrl"><label>Lignes <output id="pa-o">8</output><input type="range" id="pa-n" min="3" max="12" step="1" value="8"></label></div>
+      <div class="pascal" id="pa-tri" role="group" aria-label="Triangle de Pascal"></div>
+      <p class="verdict" id="pa-msg">Cliquez sur un coefficient : il s'obtient en additionnant les deux au-dessus.</p>
+    </div>
+  </div>
+  <p class="small">Les bords valent 1. L'entrée de ligne \(n\), colonne \(p\) vaut \(\binom np\). Par exemple \(\binom42=\binom31+\binom32=3+3=6\) ; \(\binom53+\binom54=10+5=15=\binom64\).</p>
+
+  <div class="box thm"><b>Somme des coefficients</b> <span class="tag">démonstration au programme</span>
+    \[ \sum_{p=0}^{n}\binom np=2^n. \]
+  </div>
+  <details class="box proof"><summary>Démonstration par double dénombrement</summary>
+    <p><i>Premier comptage.</i> Toutes les parties de \(E\) se répartissent en classes disjointes selon leur taille : \(0,1,\dots,n\). Il y a \(\binom np\) parties de taille \(p\), donc \(\sum_{p=0}^n\binom np\) parties au total.</p>
+    <p><i>Second comptage.</i> Pour chaque élément, deux choix, le prendre ou l'exclure. Il y a donc \(2^n\) parties.</p>
+    <p>Ces deux comptages portent sur le même ensemble : les résultats sont égaux.</p>
+    <p class="small">Exemple : \(E=\{1,2,3\}\) possède \(1+3+3+1=8=2^3\) parties.</p>
+  </details>
+  <div class="box warn"><b>Domaine de la relation de Pascal</b>
+    <p>Utiliser \(p\lt n\). Le cas \(p=n\) demande la convention supplémentaire \(\binom n{n+1}=0\), absente de la preuve par factorielles.</p>
+  </div>
+</section>
+
+<section class="sec" id="ch2-7" data-t="Algorithmes">
+  <h2><span class="no">7</span>Les algorithmes du cours</h2>
+  <p class="small">Les paramètres sont des entiers : \(n\ge0\) ; pour les arrangements, \(0\le k\le n\).</p>
+  <div class="two">
+    <div class="box"><b>Factorielle</b>
+<pre><code>def fact(n):
+    f = 1
+    for k in range(1, n + 1):
+        f = f * k
+    return f</code></pre>
+      <p class="small"><code>range(1, n + 1)</code> parcourt \(1,\dots,n\). Pour \(n=0\), la boucle est vide et renvoie bien 1.</p></div>
+    <div class="box"><b>Arrangements \(A_n^k\)</b>
+<pre><code>def kuplets_distincts(n, k):
+    c = 1
+    for i in range(k):
+        c = c * (n - i)
+    return c</code></pre>
+      <p class="small">On multiplie \(n,\ n-1,\dots,n-k+1\). Pour \(k=0\), le résultat est 1.</p></div>
+  </div>
+  <div class="box"><b>Générer une permutation aléatoire de \(\{1,\dots,n\}\)</b>
+<pre><code>from random import randint
+
+def generer_perm(n):
+    perm = []
+    urne = list(range(1, n + 1))
+    for k in range(n):
+        index = randint(0, len(urne) - 1)
+        choix = urne.pop(index)
+        perm.append(choix)
+    return perm</code></pre>
+    <p class="small"><code>urne</code> contient les nombres non encore tirés. <code>pop(index)</code> retire et renvoie l'élément choisi ; <code>append</code> l'ajoute à la permutation. <b>Indice corrigé</b> : <code>randint</code> inclut sa borne supérieure, les indices valides vont de 0 à <code>len(urne) - 1</code>. Chaque nombre apparaît une fois ; des choix uniformes sans remise donnent une permutation uniforme.</p>
+  </div>
+  <div class="two">
+    <div class="box"><b>Parties à deux éléments</b>
+<pre><code>def gen_parties_2(n):
+    L = []
+    for i in range(1, n):
+        for j in range(i + 1, n + 1):
+            L.append([i, j])
+    return L</code></pre>
+      <p class="small">La condition \(i\lt j\) évite les répétitions et les doublons dus à l'ordre. Résultat : \(\binom n2\) listes.</p></div>
+    <div class="box"><b>Parties à trois éléments</b>
+<pre><code>def gen_parties_3(n):
+    L = []
+    for i in range(1, n - 1):
+        for j in range(i + 1, n):
+            for k in range(j + 1, n + 1):
+                L.append([i, j, k])
+    return L</code></pre>
+      <p class="small">On impose \(i\lt j\lt k\). Résultat : \(\binom n3\) listes, chacune représentant une partie.</p></div>
+  </div>
+  <div class="box ex"><b>Vérifier sur \(E=\{1,2,3,4\}\)</b>
+    <p>Parties à deux éléments : \(\{1,2\},\{1,3\},\{1,4\},\{2,3\},\{2,4\},\{3,4\}\) : \(6=\binom42\).</p>
+    <p>Parties à trois éléments : \(\{1,2,3\},\{1,2,4\},\{1,3,4\},\{2,3,4\}\) : \(4=\binom43\).</p>
+  </div>
+  <div class="widget" id="w-parts">
+    <div class="whead"><b>Générateur de parties</b><span>exécute <code>gen_parties_k</code></span></div>
+    <div class="wbody">
+      <div class="ctrl">
+        <label>\(n\)<input type="number" id="pt-n" value="4" min="1" max="8"></label>
+        <label>Taille \(k\)<select id="pt-k"><option>1</option><option selected>2</option><option>3</option><option>4</option></select></label>
+      </div>
+      <p class="verdict" id="pt-out"></p>
+      <div class="chips" id="pt-list"></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="ch2-8" data-t="Choisir la formule">
+  <h2><span class="no">8</span>Choisir la formule et réviser efficacement</h2>
+  <div class="box tip"><b>Le premier réflexe : définir ce que l'on compte</b>
+    <p>Préciser \(n\) (éléments disponibles), \(p\) (éléments ou positions à choisir), l'importance de l'ordre et la possibilité de répéter. Un dénombrement compte des objets, pas seulement des nombres.</p>
+  </div>
+  <div class="decision" role="group" aria-label="Arbre de décision">
+    <div class="dq">L'ordre des \(p\) éléments compte-t-il ?</div>
+    <div class="dcols">
+      <div class="dcol"><span class="dl">Oui</span>
+        <div class="dq">Répétitions autorisées ?</div>
+        <div class="dcols">
+          <div class="dcol"><span class="dl">Oui</span><div class="dr">\(n^p\)<small>liste avec répétitions</small></div></div>
+          <div class="dcol"><span class="dl">Non</span><div class="dr">\(A_n^p=\dfrac{n!}{(n-p)!}\)<small>arrangement</small></div><div class="dn">Si \(p=n\) : permutation \(n!\)</div></div>
+        </div>
+      </div>
+      <div class="dcol"><span class="dl">Non</span><div class="dn">Sans répétition : partie de \(p\) éléments parmi \(n\)</div><div class="dr">\(\dbinom np=\dfrac{n!}{p!\,(n-p)!}\)<small>combinaison</small></div></div>
+    </div>
+  </div>
+  <div class="box def"><b>Les quatre situations principales</b>
+    <ul>
+      <li><b>Liste avec répétition</b> : \(p\) positions, \(n\) possibilités par position ⇒ \(n^p\). <i>Exemple</i> : code de chiffres.</li>
+      <li><b>Arrangement</b> : \(p\) éléments distincts, rôles ou ordre distincts ⇒ \(A_n^p\). <i>Exemple</i> : trois prises affectées à douze positions.</li>
+      <li><b>Permutation</b> : ordonner les \(n\) éléments distincts ⇒ \(n!\). <i>Exemple</i> : ordre de passage de tous les élèves.</li>
+      <li><b>Combinaison</b> : choisir une partie de taille \(p\), sans ordre ⇒ \(\binom np\). <i>Exemple</i> : délégués ayant le même rôle.</li>
+    </ul>
+  </div>
+  <div class="box note"><b>Gérer les contraintes</b>
+    <ul>
+      <li>Une étape imposée : un seul choix, donc un facteur 1.</li>
+      <li>Des éléments imposés dans un groupe : les fixer, puis choisir les autres dans les éléments restants.</li>
+      <li>Une situation interdite : compter tout, puis retirer les cas interdits (comme Emma et Bastien).</li>
+      <li>Plusieurs cas : additionner seulement s'ils sont disjoints ; sinon, retirer le recouvrement.</li>
+      <li>Toutes les parties, de toute taille : \(2^n\), et non une seule combinaison \(\binom np\).</li>
+    </ul>
+  </div>
+  <div class="box thm"><b>Formules à mémoriser</b>
+    \[ 0!=1,\quad n!=n\,(n-1)!,\quad A_n^p=\frac{n!}{(n-p)!},\quad \binom np=\frac{n!}{p!\,(n-p)!} \]
+    \[ \binom np=\binom n{n-p},\qquad \binom np+\binom n{p+1}=\binom{n+1}{p+1}\ (p\lt n),\qquad \sum_{p=0}^n\binom np=2^n \]
+  </div>
+  <div class="box note"><b>Calculatrice, tableur et démonstrations</b>
+    <p>Pour un coefficient binomial, le cours mentionne les fonctions <code>nCr</code>, <i>combinaison</i> ou <i>binomial</i> ; en tableur français, \(\binom{25}{24}\) se calcule avec <code>=COMBIN(25;24)</code>.</p>
+    <p><b>Démonstrations au programme :</b> relation de Pascal et identité \(\sum\binom np=2^n\). <b>Justifications à maîtriser :</b> produit pour les arrangements et permutations ; division par \(p!\) pour les combinaisons ; deux choix par élément pour \(2^n\).</p>
+    <p class="small">« Dénombrement » est le nom général de l'activité : il englobe les principes additif et multiplicatif, les listes, les arrangements, les permutations et les combinaisons. Ce n'est pas une cinquième formule.</p>
+  </div>
+  <div class="quiz" data-quiz="q2"></div>
+</section>
+</article>
