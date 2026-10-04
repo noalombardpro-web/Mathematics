@@ -1,102 +1,306 @@
 <title>Multiplication Japonaise</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&family=Shippori+Mincho:wght@800&display=swap">
 <style>
-/* Layout: contrôles en haut, grand schéma losange au centre, explication de l'étape en dessous */
+/* Layout: application à menu latéral (barre horizontale sur mobile), vues Calculateur / Guide / Historique / Réglages. Thème sombre assumé. */
 :root{
-  --bg:#f3f4f7; --panel:#ffffff; --fg:#161b2e; --muted:#5b6279; --line:#d9dce6;
-  --a:#27407f; --b:#c4721a; --dot:#0f1428; --ok:#1d7a55;
-  --display:"Shippori Mincho","Hiragino Mincho ProN",Georgia,serif;
-  --body:"Zen Kaku Gothic New","Hiragino Sans",system-ui,sans-serif;
+  --bg:#0a0d14; --side:#0e121b; --surface:#121824; --surface2:#182030; --line:#222b3e; --line2:#2e3a52;
+  --fg:#e7eaf3; --muted:#8a94ac; --faint:#5d6781;
+  --a:#5aa9ff; --b:#ffb454; --ok:#4cd9a0; --warn:#ff7a7a; --dot:#f2f4fa;
+  --sw:4;
+  --ui:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --brand:"Shippori Mincho","Hiragino Mincho ProN",serif;
+  color-scheme:dark;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0e111c; --panel:#161a29; --fg:#e8eaf2; --muted:#9ba2ba; --line:#2a3048;
-  --a:#7f9cf0; --b:#f0a850; --dot:#f4f5fa; --ok:#5fd0a0; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0e111c; --panel:#161a29; --fg:#e8eaf2; --muted:#9ba2ba; --line:#2a3048;
-  --a:#7f9cf0; --b:#f0a850; --dot:#f4f5fa; --ok:#5fd0a0; color-scheme:dark}
-body{background:var(--bg);color:var(--fg);font-family:var(--body);padding-inline:16px;padding-block:24px}
-.wrap{max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
-h1{font-family:var(--display);font-weight:800;font-size:clamp(26px,5vw,38px);margin:0;letter-spacing:.02em;text-wrap:balance}
-.sub{margin:4px 0 0;color:var(--muted);font-size:15px;max-width:60ch;line-height:1.5}
-.bar{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 16px}
-.field{display:flex;flex-direction:column;gap:4px;min-width:0}
-.field label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-input{font:700 28px/1 var(--display);width:6.2ch;padding:10px 12px;border:2px solid var(--line);border-radius:6px;background:var(--panel);color:var(--fg);font-variant-numeric:tabular-nums}
-#ia{border-color:var(--a)} #ib{border-color:var(--b)}
-.times{font:800 28px var(--display);padding-bottom:10px;color:var(--muted)}
-button{font:500 15px var(--body);padding:11px 16px;border-radius:6px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
-button:hover{border-color:var(--muted)}
-button.primary{background:var(--fg);color:var(--bg);border-color:var(--fg)}
-button:disabled{opacity:.4;cursor:default}
-:focus-visible{outline:3px solid var(--a);outline-offset:2px}
-.stage{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;overflow-x:auto}
-svg{display:block;width:100%;height:auto;max-height:70vh}
-.la{stroke:var(--a);stroke-width:4;stroke-linecap:round}
-.lb{stroke:var(--b);stroke-width:4;stroke-linecap:round}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font:400 14px/1.5 var(--ui)}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--a);outline-offset:2px}
+
+.app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100%}
+/* menu latéral */
+.side{background:var(--side);border-right:1px solid var(--line);padding:20px 12px;display:flex;flex-direction:column;gap:24px;position:sticky;top:0;height:100vh;align-self:start}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px}
+.logo{width:34px;height:34px;border-radius:8px;background:var(--surface2);border:1px solid var(--line2);display:grid;place-items:center;font:800 19px var(--brand);color:var(--a)}
+.brand b{display:block;font-weight:600;font-size:14px;letter-spacing:.01em}
+.brand span{display:block;font-size:11px;color:var(--muted)}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav small{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);padding:0 10px 6px}
+.nav button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;border-radius:7px;padding:9px 10px;color:var(--muted);font-weight:500}
+.nav button:hover{background:var(--surface);color:var(--fg)}
+.nav button[aria-current="page"]{background:var(--surface2);color:var(--fg);box-shadow:inset 2px 0 0 var(--a)}
+.nav svg{width:17px;height:17px;flex:none;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.badge{margin-left:auto;font:600 11px var(--mono);background:var(--line);color:var(--muted);padding:1px 7px;border-radius:99px}
+.side-foot{margin-top:auto;padding:0 10px;font-size:12px;color:var(--faint)}
+
+/* zone principale */
+.main{min-width:0;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:18px 28px;border-bottom:1px solid var(--line);background:var(--bg);position:sticky;top:0;z-index:5}
+.top h1{margin:0;font-size:18px;font-weight:600;letter-spacing:.005em}
+.top p{margin:0;color:var(--muted);font-size:13px}
+.view{padding:24px 28px 40px;display:flex;flex-direction:column;gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;min-width:0}
+.card h2{margin:0;font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.pad{padding:16px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:8px 14px;border-radius:7px;border:1px solid var(--line2);background:var(--surface2);font-weight:500;font-size:13px}
+.btn:hover{border-color:var(--faint)}
+.btn.pri{background:var(--a);border-color:var(--a);color:#06101f;font-weight:600}
+.btn.pri:hover{filter:brightness(1.08)}
+.btn:disabled{opacity:.4;cursor:default;filter:none}
+.btn.danger{color:var(--warn)}
+
+/* calculateur */
+.calc{display:grid;grid-template-columns:300px minmax(0,1fr);gap:20px;align-items:start}
+.col{display:flex;flex-direction:column;gap:20px;min-width:0}
+.inputs{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:end;margin-top:12px}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.field label{font-size:12px;color:var(--muted)}
+.num{width:100%;min-width:0;font:600 22px var(--mono);padding:9px 10px;border-radius:7px;background:var(--bg);border:1px solid var(--line2);font-variant-numeric:tabular-nums}
+#ia{border-color:color-mix(in srgb,var(--a) 55%,var(--line2))}
+#ib{border-color:color-mix(in srgb,var(--b) 55%,var(--line2))}
+.x{font:500 20px var(--mono);color:var(--faint);padding-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.chip{background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:3px 10px;font:500 12px var(--mono);color:var(--muted)}
+.chip:hover{color:var(--fg);border-color:var(--line2)}
+.row{display:flex;gap:8px;margin-top:14px}
+.row .btn{flex:1}
+.steps{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:2px}
+.steps button{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:none;border:0;border-radius:7px;padding:9px 10px;color:var(--muted)}
+.steps button:hover{background:var(--surface2)}
+.steps .n{flex:none;width:22px;height:22px;border-radius:50%;border:1px solid var(--line2);display:grid;place-items:center;font:600 11px var(--mono)}
+.steps .tt{font-weight:500;color:var(--fg)}
+.steps .dd{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.steps li.done .n{background:var(--surface2);color:var(--ok);border-color:var(--ok)}
+.steps li.cur button{background:var(--surface2)}
+.steps li.cur .n{background:var(--a);border-color:var(--a);color:#06101f}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+.stat{background:var(--surface);padding:12px 14px}
+.stat span{display:block;font-size:11px;color:var(--muted)}
+.stat b{font:600 20px var(--mono);font-variant-numeric:tabular-nums}
+.stat.a b{color:var(--a)} .stat.b b{color:var(--b)}
+
+.stagehead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 16px;border-bottom:1px solid var(--line)}
+.eq{font:600 22px var(--mono);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.eq .ea{color:var(--a)} .eq .eb{color:var(--b)} .eq .er{color:var(--ok)} .eq .o{color:var(--faint)}
+.ver{font-size:12px;padding:3px 10px;border-radius:99px;border:1px solid var(--ok);color:var(--ok)}
+.ver.bad{border-color:var(--warn);color:var(--warn)}
+.canvas{padding:12px;overflow-x:auto;background:
+  radial-gradient(circle at 1px 1px,var(--line) 1px,transparent 0) 0 0/22px 22px}
+svg.draw{display:block;width:100%;height:auto;max-height:64vh}
+.say{margin:0;padding:12px 16px;border-top:1px solid var(--line);color:var(--muted);min-height:3.2em}
+.say b{color:var(--fg);font-weight:600}
+
+/* dessin svg */
+.la{stroke:var(--a);stroke-width:var(--sw);stroke-linecap:round}
+.lb{stroke:var(--b);stroke-width:var(--sw);stroke-linecap:round}
 .dot{fill:var(--dot)}
-.sep{stroke:var(--line);stroke-width:2;stroke-dasharray:6 8}
-.t{font-family:var(--display);font-weight:800;fill:var(--fg);text-anchor:middle;font-variant-numeric:tabular-nums}
-.tl{font-family:var(--body);font-size:17px;fill:var(--muted);text-anchor:start}
-.ta{fill:var(--a)} .tb{fill:var(--b)}
-.res{fill:var(--ok)}
+.sep{stroke:var(--line2);stroke-width:2;stroke-dasharray:6 8}
+.t{font-family:var(--mono);font-weight:600;fill:var(--fg);text-anchor:middle}
+.tl{font:500 17px var(--ui);fill:var(--faint);text-anchor:start}
+.ta{fill:var(--a)} .tb{fill:var(--b)} .tm{fill:var(--muted)}
+.t.res{fill:var(--ok)}
 .fade{animation:in .4s ease both}
+.noanim .fade{animation:none}
 @keyframes in{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion:reduce){.fade{animation:none}}
-.foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 20px}
-.steps{display:flex;gap:8px;flex-wrap:wrap}
-.say{margin:0;flex:1 1 280px;min-width:0;line-height:1.55;font-size:15px}
-.eq{font:800 clamp(24px,5vw,34px) var(--display);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
-.eq .ea{color:var(--a)} .eq .eb{color:var(--b)} .eq .er{color:var(--ok)}
+
+/* guide */
+.guide{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.guide .card h3{margin:0 0 6px;font-size:15px;font-weight:600}
+.guide .card p{margin:0;color:var(--muted)}
+.guide .k{font:600 11px var(--mono);color:var(--a);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;display:block}
+.lede{max-width:70ch;color:var(--muted);margin:0}
+
+/* historique / tableau */
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:420px}
+th{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600;text-align:left;padding:10px 16px;border-bottom:1px solid var(--line)}
+td{padding:11px 16px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:0}
+td.m{font-family:var(--mono)}
+td.r{text-align:right;white-space:nowrap}
+.empty{padding:36px 16px;text-align:center;color:var(--muted)}
+
+/* réglages */
+.set{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.opt{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.opt:last-child{border-bottom:0}
+.opt b{display:block;font-weight:500}
+.opt span{font-size:12px;color:var(--muted)}
+.sw{position:relative;width:38px;height:22px;flex:none}
+.sw input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.sw i{position:absolute;inset:0;border-radius:99px;background:var(--line2);transition:background .15s;pointer-events:none}
+.sw i::after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:var(--fg);transition:transform .15s}
+.sw input:checked+i{background:var(--a)}
+.sw input:checked+i::after{transform:translateX(16px);background:#06101f}
+.sw input:focus-visible+i{outline:2px solid var(--a);outline-offset:2px}
+.pal{display:flex;gap:8px;flex-wrap:wrap}
+.pal button{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:7px;border:1px solid var(--line2);background:var(--surface2)}
+.pal button[aria-pressed="true"]{border-color:var(--fg)}
+.pal i{width:12px;height:12px;border-radius:50%;display:inline-block}
+input[type=range]{accent-color:var(--a);width:130px}
+
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:static;height:auto;flex-direction:row;align-items:center;gap:12px;padding:10px 12px;border-right:0;border-bottom:1px solid var(--line);overflow-x:auto}
+  .brand span,.nav small,.side-foot{display:none}
+  .nav{flex-direction:row;gap:4px}
+  .nav button{white-space:nowrap;width:auto}
+  .top{position:static;padding:16px}
+  .view{padding:16px 16px 32px}
+  .calc{grid-template-columns:minmax(0,1fr)}
+}
 </style>
 
-<div class="wrap">
-  <header>
-    <h1>Multiplication japonaise</h1>
-    <p class="sub">Chaque chiffre devient des traits. Les traits se croisent, on compte les points par colonne, puis on reporte les retenues.</p>
-  </header>
-
-  <div class="bar">
-    <div class="field"><label for="ia">Premier nombre</label><input id="ia" inputmode="numeric" maxlength="4" value="123" autocomplete="off"></div>
-    <div class="times" aria-hidden="true">×</div>
-    <div class="field"><label for="ib">Second nombre</label><input id="ib" inputmode="numeric" maxlength="4" value="32" autocomplete="off"></div>
-    <button id="rnd" type="button">Au hasard</button>
-  </div>
-
-  <div class="stage"><svg id="svg" role="img" aria-label="Schéma de la multiplication japonaise"></svg></div>
-
-  <div class="foot">
-    <p class="say" id="say" aria-live="polite"></p>
-    <div class="steps">
-      <button id="prev" type="button">Précédent</button>
-      <button id="next" class="primary" type="button">Étape suivante</button>
-      <button id="all" type="button">Tout afficher</button>
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">乗</div>
+      <div><b>Multiplication japonaise</b><span>Méthode des traits</span></div>
     </div>
+    <nav class="nav" aria-label="Navigation principale">
+      <small>Menu</small>
+      <button type="button" data-view="calcul"><svg viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></svg>Calculateur</button>
+      <button type="button" data-view="guide"><svg viewBox="0 0 24 24"><path d="M5 4h10a3 3 0 013 3v13H8a3 3 0 01-3-3z"/><path d="M5 17a3 3 0 013-3h10"/></svg>Guide</button>
+      <button type="button" data-view="historique"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>Historique<span class="badge" id="hcount">0</span></button>
+      <button type="button" data-view="reglages"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>Réglages</button>
+    </nav>
+    <div class="side-foot">Jusqu'à 4 chiffres par nombre</div>
+  </aside>
+
+  <div class="main">
+    <header class="top">
+      <div><h1 id="title">Calculateur</h1><p id="subtitle"></p></div>
+      <button class="btn" id="rnd" type="button">Calcul au hasard</button>
+    </header>
+
+    <!-- Calculateur -->
+    <section class="view" id="v-calcul">
+      <div class="calc">
+        <div class="col">
+          <div class="card pad">
+            <h2>Nombres</h2>
+            <div class="inputs">
+              <div class="field"><label for="ia">Premier</label><input class="num" id="ia" inputmode="numeric" maxlength="4" value="123" autocomplete="off"></div>
+              <div class="x" aria-hidden="true">×</div>
+              <div class="field"><label for="ib">Second</label><input class="num" id="ib" inputmode="numeric" maxlength="4" value="32" autocomplete="off"></div>
+            </div>
+            <div class="chips" id="chips"></div>
+          </div>
+          <div class="card pad">
+            <h2>Déroulement</h2>
+            <ol class="steps" id="steps"></ol>
+            <div class="row">
+              <button class="btn" id="prev" type="button">Précédent</button>
+              <button class="btn pri" id="next" type="button">Suivant</button>
+            </div>
+            <div class="row"><button class="btn" id="all" type="button">Tout afficher</button></div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="stats">
+            <div class="stat a"><span>Traits bleus</span><b id="sa">0</b></div>
+            <div class="stat b"><span>Traits orange</span><b id="sb">0</b></div>
+            <div class="stat"><span>Intersections</span><b id="si">0</b></div>
+          </div>
+          <div class="card">
+            <div class="stagehead"><div class="eq" id="eq"></div><span class="ver" id="ver" hidden>Résultat vérifié</span></div>
+            <div class="canvas"><svg class="draw" id="svg" role="img" aria-label="Schéma de la multiplication japonaise"></svg></div>
+            <p class="say" id="say" aria-live="polite"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Guide -->
+    <section class="view" id="v-guide" hidden>
+      <p class="lede">La multiplication japonaise remplace les chiffres par des traits. On croise les traits, on compte les points de croisement par colonne, puis on additionne les retenues. Aucune table de multiplication n'est nécessaire.</p>
+      <div class="guide">
+        <div class="card pad"><span class="k">Étape 1</span><h3>Dessiner les traits</h3><p>Le premier nombre se dessine en traits bleus inclinés vers le bas à droite, le second en traits orange inclinés vers le haut à droite. Un chiffre vaut autant de traits. Un zéro laisse un vide.</p></div>
+        <div class="card pad"><span class="k">Étape 2</span><h3>Repérer les intersections</h3><p>Chaque croisement entre un trait bleu et un trait orange est un point. Les points forment des groupes alignés verticalement.</p></div>
+        <div class="card pad"><span class="k">Étape 3</span><h3>Compter par colonne</h3><p>Chaque colonne correspond à une position : unités, dizaines, centaines. On compte les points de chaque colonne, de gauche à droite.</p></div>
+        <div class="card pad"><span class="k">Étape 4</span><h3>Reporter les retenues</h3><p>En partant de la droite, on garde le chiffre des unités du total de la colonne et on reporte le reste dans la colonne de gauche.</p></div>
+      </div>
+      <div class="card">
+        <div class="stagehead"><div class="eq"><span class="ea">12</span> <span class="o">×</span> <span class="eb">13</span> <span class="o">=</span> <span class="er">156</span></div><span class="ver" style="border-color:var(--line2);color:var(--muted)">Exemple</span></div>
+        <div class="canvas"><svg class="draw" id="svg-guide" role="img" aria-label="Exemple 12 fois 13"></svg></div>
+        <p class="say">Colonnes : 1 point, 5 points (1×3 + 2×1), 6 points (2×3). On lit 1, 5, 6 sans retenue : 156.</p>
+      </div>
+      <div class="card pad">
+        <h2>Pourquoi ça marche</h2>
+        <p class="lede" style="margin-top:10px">Un trait bleu du chiffre <i>a</i> croise <i>b</i> traits orange du chiffre <i>b'</i> : on compte <i>a × b'</i> points. Les colonnes regroupent les produits qui ont le même poids en puissance de dix, c'est exactement le développement de la multiplication posée.</p>
+      </div>
+    </section>
+
+    <!-- Historique -->
+    <section class="view" id="v-historique" hidden>
+      <div class="card">
+        <div class="stagehead"><h2>Calculs récents</h2><button class="btn danger" id="hclear" type="button">Tout effacer</button></div>
+        <div class="tablewrap"><table><thead><tr><th>Calcul</th><th>Résultat</th><th></th></tr></thead><tbody id="hbody"></tbody></table></div>
+        <div class="empty" id="hempty">Aucun calcul pour le moment. Les calculs terminés apparaissent ici.</div>
+      </div>
+    </section>
+
+    <!-- Réglages -->
+    <section class="view" id="v-reglages" hidden>
+      <div class="set">
+        <div class="card">
+          <div class="opt"><div><b>Palette des traits</b><span>Couleurs du premier et du second nombre</span></div></div>
+          <div class="opt"><div class="pal" id="pal"></div></div>
+          <div class="opt"><div><b>Épaisseur des traits</b><span id="swv">4</span></div><input type="range" id="sw" min="2" max="7" step="1" value="4"></div>
+        </div>
+        <div class="card">
+          <div class="opt"><div><b>Chiffres au bout des traits</b><span>Rappelle quel chiffre produit chaque groupe</span></div><label class="sw"><input type="checkbox" id="o-digits"><i></i></label></div>
+          <div class="opt"><div><b>Séparateurs de colonnes</b><span>Lignes pointillées entre les positions</span></div><label class="sw"><input type="checkbox" id="o-sep"><i></i></label></div>
+          <div class="opt"><div><b>Étiquettes des lignes</b><span>Points, retenue, chiffre</span></div><label class="sw"><input type="checkbox" id="o-labels"><i></i></label></div>
+          <div class="opt"><div><b>Animations</b><span>Apparition progressive des éléments</span></div><label class="sw"><input type="checkbox" id="o-anim"><i></i></label></div>
+        </div>
+      </div>
+    </section>
   </div>
-  <div class="eq" id="eq"></div>
 </div>
 
 <script>
-const S = 14, P = 18 * S, MAX_STEP = 4;
+const S = 14, P = 18 * S, MAX = 4;
 const $ = id => document.getElementById(id);
-let step = MAX_STEP;
-
-const texts = [
-  "Traits : chaque chiffre donne autant de traits. Le premier nombre en bleu, le second en orange. Un zéro laisse un vide.",
-  "Intersections : chaque point est le croisement d'un trait bleu et d'un trait orange.",
-  "Colonnes : on compte les points de chaque colonne verticale. Chaque colonne est une position (unités, dizaines, centaines…).",
-  "Retenues : en partant de la droite, on ajoute la retenue au nombre de points. On garde le dernier chiffre et on reporte le reste à gauche.",
-  "Résultat : on lit les chiffres obtenus de gauche à droite."
+const STEPS = [
+  ["Traits", "Un chiffre vaut autant de traits"],
+  ["Intersections", "Chaque croisement est un point"],
+  ["Colonnes", "On compte les points par colonne"],
+  ["Retenues", "On reporte de droite à gauche"],
+  ["Résultat", "Lecture des chiffres"]
 ];
+const SAYS = [
+  "<b>Traits.</b> Premier nombre en bleu, second en orange. Un zéro laisse un vide.",
+  "<b>Intersections.</b> Chaque point est le croisement d'un trait bleu et d'un trait orange.",
+  "<b>Colonnes.</b> On compte les points de chaque colonne : unités, dizaines, centaines.",
+  "<b>Retenues.</b> De droite à gauche, on ajoute la retenue, on garde le dernier chiffre et on reporte le reste.",
+  "<b>Résultat.</b> On lit les chiffres obtenus de gauche à droite."
+];
+const PALETTES = {
+  ocean: ["Bleu / Orange", "#5aa9ff", "#ffb454"],
+  neon: ["Cyan / Rose", "#3fe0d0", "#ff6fb1"],
+  forest: ["Vert / Violet", "#7ee07a", "#b794ff"]
+};
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+let cfg = Object.assign({ pal: "ocean", sw: 4, digits: true, sep: true, labels: true, anim: true }, store.get("jp-cfg", {}));
+let hist = store.get("jp-hist", []);
+let touched = false, step = 4, view = "calcul", saveTimer = null;
 
-function digits(el) {
+/* ---------- calcul ---------- */
+function parse(el) {
   const v = el.value.replace(/\D/g, "").slice(0, 4);
   if (v !== el.value) el.value = v;
   return v === "" ? null : v.split("").map(Number);
 }
-
 function compute(A, B) {
-  const na = A.length, nb = B.length, K = na + nb - 1;
+  const K = A.length + B.length - 1;
   const counts = Array(K).fill(0);
   A.forEach((a, i) => B.forEach((b, j) => counts[i + j] += a * b));
   const carryIn = Array(K).fill(0), digs = Array(K).fill(0);
@@ -106,101 +310,166 @@ function compute(A, B) {
     const t = counts[k] + carry;
     digs[k] = t % 10; carry = Math.floor(t / 10);
   }
-  const extra = []; // chiffres à gauche (colonnes -1, -2…)
+  const extra = [];
   while (carry > 0) { extra.push(carry % 10); carry = Math.floor(carry / 10); }
   return { counts, carryIn, digs, extra, K };
 }
-
-function lineSet(n, digs) {
+const lineSet = ds => {
   const out = [];
-  digs.forEach((d, g) => {
-    for (let t = 0; t < d; t++) out.push({ c: g * P + (t - (d - 1) / 2) * S, g });
-  });
+  ds.forEach((d, g) => { for (let t = 0; t < d; t++) out.push({ c: g * P + (t - (d - 1) / 2) * S }); });
   return out;
-}
+};
 
-function render() {
-  const A = digits($("ia")), B = digits($("ib"));
-  const svg = $("svg");
-  if (!A || !B) { svg.innerHTML = ""; $("say").textContent = "Entrez deux nombres.";
-    $("eq").textContent = ""; return; }
+/* ---------- dessin ---------- */
+function draw(svg, A, B, st) {
   const na = A.length, nb = B.length, m = 2 * S;
-  const R = compute(A, B);
-  const la = lineSet(na, A), lb = lineSet(nb, B);
-  const caMin = -(4 * S) - 0, caMax = (na - 1) * P + 4 * S;
-  const cbMin = -(4 * S), cbMax = (nb - 1) * P + 4 * S;
-  const aLo = caMin - m, aHi = caMax + m, bLo = cbMin - m, bHi = cbMax + m;
+  const R = compute(A, B), la = lineSet(A), lb = lineSet(B);
+  const aLo = -4 * S - m, aHi = (na - 1) * P + 4 * S + m;
+  const bLo = -4 * S - m, bHi = (nb - 1) * P + 4 * S + m;
   const pt = (ca, cb) => [(ca + cb) / 2, (cb - ca) / 2];
-
   const yMin = (bLo - aHi) / 2, yMax = (bHi - aLo) / 2;
-  const xMin = Math.min(-(R.extra.length) * P / 2 - P / 2, (aLo + bLo) / 2) - 120;
+  const xMin = Math.min(-(R.extra.length + 1) * P / 2, (aLo + bLo) / 2) - 120;
   const xMax = (aHi + bHi) / 2 + 30;
   const rowY = [yMax + 60, yMax + 115, yMax + 175];
-  const H = rowY[2] + 40, top = yMin - 60;
-  const W = xMax - xMin;
-  svg.setAttribute("viewBox", `${xMin} ${top} ${W} ${H - top}`);
-
+  const top = yMin - 60;
+  svg.setAttribute("viewBox", `${xMin} ${top} ${xMax - xMin} ${rowY[2] + 40 - top}`);
   let h = "";
-  // séparateurs de colonnes
-  if (step >= 2) for (let k = 0; k < R.K - 1; k++) {
+  if (st >= 2 && cfg.sep) for (let k = 0; k < R.K - 1; k++) {
     const x = (k + 0.5) * P / 2;
     h += `<line class="sep fade" x1="${x}" x2="${x}" y1="${yMin + 10}" y2="${rowY[2] + 20}"/>`;
   }
-  // traits
   la.forEach(l => { const [x1, y1] = pt(l.c, bLo), [x2, y2] = pt(l.c, bHi);
     h += `<line class="la" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`; });
   lb.forEach(l => { const [x1, y1] = pt(aLo, l.c), [x2, y2] = pt(aHi, l.c);
     h += `<line class="lb" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`; });
-  // chiffres au bout des traits
-  A.forEach((d, i) => { const [x, y] = pt(i * P, bLo);
-    h += `<text class="t ta" font-size="30" x="${x - 18}" y="${y - 14}">${d}</text>`; });
-  B.forEach((d, j) => { const [x, y] = pt(aLo, j * P);
-    h += `<text class="t tb" font-size="30" x="${x - 22}" y="${y + 18}">${d}</text>`; });
-  // intersections
-  if (step >= 1) la.forEach(a => lb.forEach(b => {
+  if (cfg.digits) {
+    A.forEach((d, i) => { const [x, y] = pt(i * P, bLo);
+      h += `<text class="t ta" font-size="30" x="${x - 18}" y="${y - 14}">${d}</text>`; });
+    B.forEach((d, j) => { const [x, y] = pt(aLo, j * P);
+      h += `<text class="t tb" font-size="30" x="${x - 22}" y="${y + 18}">${d}</text>`; });
+  }
+  if (st >= 1) la.forEach(a => lb.forEach(b => {
     const [x, y] = pt(a.c, b.c);
     h += `<circle class="dot fade" cx="${x}" cy="${y}" r="5.5"/>`; }));
-  // lignes de lecture
-  const labels = ["points", "+ retenue", "chiffre"];
-  if (step >= 2) labels.forEach((t, r) => {
-    if (r === 1 && step < 3) return; if (r === 2 && step < 3) return;
+  if (st >= 2 && cfg.labels) ["points", "+ retenue", "chiffre"].forEach((t, r) => {
+    if (r > 0 && st < 3) return;
     h += `<text class="tl" x="${xMin + 8}" y="${rowY[r] + 6}">${t}</text>`; });
+  const rc = st >= 4 ? "t res fade" : "t fade";
   for (let k = 0; k < R.K; k++) {
     const x = k * P / 2;
-    if (step >= 2) h += `<text class="t fade" font-size="34" x="${x}" y="${rowY[0]}">${R.counts[k]}</text>`;
-    if (step >= 3) {
-      h += `<text class="t fade" font-size="26" x="${x}" y="${rowY[1]}" style="fill:var(--muted)">${R.carryIn[k] ? "+" + R.carryIn[k] : "·"}</text>`;
-      h += `<text class="t fade" font-size="40" x="${x}" y="${rowY[2]}">${R.digs[k]}</text>`;
+    if (st >= 2) h += `<text class="t fade" font-size="34" x="${x}" y="${rowY[0]}">${R.counts[k]}</text>`;
+    if (st >= 3) {
+      h += `<text class="t tm fade" font-size="26" x="${x}" y="${rowY[1]}">${R.carryIn[k] ? "+" + R.carryIn[k] : "·"}</text>`;
+      h += `<text class="${rc}" font-size="40" x="${x}" y="${rowY[2]}">${R.digs[k]}</text>`;
     }
   }
-  if (step >= 3) R.extra.forEach((d, e) => {
-    const x = -(e + 1) * P / 2;
-    h += `<text class="t fade" font-size="40" x="${x}" y="${rowY[2]}">${d}</text>`; });
+  if (st >= 3) R.extra.forEach((d, e) => {
+    h += `<text class="${rc}" font-size="40" x="${-(e + 1) * P / 2}" y="${rowY[2]}">${d}</text>`; });
   svg.innerHTML = h;
-  if (step >= 4) svg.querySelectorAll("text.t.fade").forEach(t => {
-    if (+t.getAttribute("y") === rowY[2]) t.classList.add("res"); });
-
-  const prod = (BigInt($("ia").value) * BigInt($("ib").value)).toString();
-  const built = R.extra.slice().reverse().join("") + R.digs.join("");
-  const ok = String(BigInt(built)) === prod;
-  $("say").textContent = texts[step] + (step === 4 && !ok ? " (écart de calcul)" : "");
-  $("eq").innerHTML = `<span class="ea">${$("ia").value}</span> × <span class="eb">${$("ib").value}</span>` +
-    (step >= 4 ? ` = <span class="er">${prod}</span>` : "");
-  $("prev").disabled = step === 0;
-  $("next").disabled = step === MAX_STEP;
+  return { R, nLa: la.length, nLb: lb.length };
 }
 
-const reset = () => { step = 0; render(); };
+/* ---------- vue calculateur ---------- */
+function render() {
+  const ia = $("ia"), ib = $("ib"), A = parse(ia), B = parse(ib);
+  if (!A || !B) { $("svg").innerHTML = ""; $("say").textContent = "Entrez deux nombres.";
+    $("eq").textContent = ""; $("ver").hidden = true; return; }
+  const { R, nLa, nLb } = draw($("svg"), A, B, step);
+  const prod = (BigInt(ia.value) * BigInt(ib.value)).toString();
+  const built = R.extra.slice().reverse().join("") + R.digs.join("");
+  const ok = String(BigInt(built)) === prod;
+  $("sa").textContent = nLa; $("sb").textContent = nLb; $("si").textContent = nLa * nLb;
+  $("say").innerHTML = SAYS[step];
+  $("eq").innerHTML = `<span class="ea">${ia.value}</span> <span class="o">×</span> <span class="eb">${ib.value}</span>` +
+    (step >= 4 ? ` <span class="o">=</span> <span class="er">${prod}</span>` : "");
+  $("ver").hidden = step < 4; $("ver").className = "ver" + (ok ? "" : " bad");
+  $("ver").textContent = ok ? "Résultat vérifié" : "Écart de calcul";
+  $("prev").disabled = step === 0; $("next").disabled = step === MAX;
+  $("steps").innerHTML = STEPS.map(([t, d], i) =>
+    `<li class="${i < step ? "done" : i === step ? "cur" : ""}"><button type="button" data-step="${i}" ${i === step ? 'aria-current="step"' : ""}><span class="n">${i + 1}</span><span><span class="tt">${t}</span><span class="dd">${d}</span></span></button></li>`).join("");
+  clearTimeout(saveTimer);
+  if (step === MAX && touched) saveTimer = setTimeout(() => addHistory(ia.value, ib.value, prod), 1200);
+}
+function reset() { touched = true; step = 0; render(); }
+
+/* ---------- historique ---------- */
+function addHistory(a, b, p) {
+  hist = hist.filter(h => !(h.a === a && h.b === b));
+  hist.unshift({ a, b, p });
+  hist = hist.slice(0, 50);
+  store.set("jp-hist", hist); renderHistory();
+}
+function renderHistory() {
+  $("hcount").textContent = hist.length;
+  $("hempty").hidden = hist.length > 0;
+  $("hbody").innerHTML = hist.map((h, i) =>
+    `<tr><td class="m">${h.a} × ${h.b}</td><td class="m">${h.p}</td><td class="r"><button class="btn" type="button" data-open="${i}">Rouvrir</button></td></tr>`).join("");
+}
+
+/* ---------- réglages ---------- */
+function applyCfg() {
+  const [, a, b] = PALETTES[cfg.pal] || PALETTES.ocean;
+  const r = document.documentElement.style;
+  r.setProperty("--a", a); r.setProperty("--b", b); r.setProperty("--sw", cfg.sw);
+  document.body.classList.toggle("noanim", !cfg.anim);
+  $("sw").value = cfg.sw; $("swv").textContent = cfg.sw + " px";
+  $("o-digits").checked = cfg.digits; $("o-sep").checked = cfg.sep;
+  $("o-labels").checked = cfg.labels; $("o-anim").checked = cfg.anim;
+  $("pal").innerHTML = Object.entries(PALETTES).map(([k, [n, a2, b2]]) =>
+    `<button type="button" data-pal="${k}" aria-pressed="${k === cfg.pal}"><i style="background:${a2}"></i><i style="background:${b2}"></i>${n}</button>`).join("");
+  store.set("jp-cfg", cfg);
+  render(); drawGuide();
+}
+function drawGuide() { draw($("svg-guide"), [1, 2], [1, 3], 4); }
+
+/* ---------- navigation ---------- */
+const TITLES = {
+  calcul: ["Calculateur", "Visualisez une multiplication étape par étape"],
+  guide: ["Guide", "Comprendre la méthode des traits"],
+  historique: ["Historique", "Vos derniers calculs"],
+  reglages: ["Réglages", "Apparence du schéma"]
+};
+function show(v) {
+  if (!TITLES[v]) v = "calcul";
+  view = v;
+  Object.keys(TITLES).forEach(k => { $("v-" + k).hidden = k !== v; });
+  document.querySelectorAll(".nav button").forEach(b =>
+    b.hasAttribute("data-view") && (b.dataset.view === v ? b.setAttribute("aria-current", "page") : b.removeAttribute("aria-current")));
+  $("title").textContent = TITLES[v][0]; $("subtitle").textContent = TITLES[v][1];
+  $("rnd").hidden = v !== "calcul";
+  try { history.replaceState(null, "", "#" + v); } catch (e) {}
+  if (v === "calcul") render();
+  if (v === "guide") drawGuide();
+}
+
+/* ---------- événements ---------- */
+document.querySelector(".nav").addEventListener("click", e => {
+  const b = e.target.closest("[data-view]"); if (b) show(b.dataset.view); });
 $("ia").addEventListener("input", reset);
 $("ib").addEventListener("input", reset);
 $("prev").onclick = () => { step = Math.max(0, step - 1); render(); };
-$("next").onclick = () => { step = Math.min(MAX_STEP, step + 1); render(); };
-$("all").onclick = () => { step = MAX_STEP; render(); };
+$("next").onclick = () => { touched = true; step = Math.min(MAX, step + 1); render(); };
+$("all").onclick = () => { touched = true; step = MAX; render(); };
+$("steps").addEventListener("click", e => {
+  const b = e.target.closest("[data-step]"); if (b) { touched = true; step = +b.dataset.step; render(); } });
+const EX = [["12", "13"], ["23", "14"], ["47", "38"], ["123", "32"], ["305", "42"], ["999", "99"], ["1234", "56"]];
+$("chips").innerHTML = EX.map(([a, b]) => `<button class="chip" type="button" data-a="${a}" data-b="${b}">${a} × ${b}</button>`).join("");
+$("chips").addEventListener("click", e => {
+  const c = e.target.closest(".chip"); if (!c) return;
+  $("ia").value = c.dataset.a; $("ib").value = c.dataset.b; reset(); });
 $("rnd").onclick = () => {
   const r = n => String(Math.floor(Math.random() * (10 ** n - 10 ** (n - 1))) + 10 ** (n - 1));
-  $("ia").value = r(2 + Math.floor(Math.random() * 2));
-  $("ib").value = r(2);
-  reset();
-};
-render();
+  $("ia").value = r(2 + Math.floor(Math.random() * 2)); $("ib").value = r(2); reset(); };
+$("hbody").addEventListener("click", e => {
+  const b = e.target.closest("[data-open]"); if (!b) return;
+  const h = hist[+b.dataset.open]; $("ia").value = h.a; $("ib").value = h.b; step = 0; show("calcul"); });
+$("hclear").onclick = () => { hist = []; store.set("jp-hist", hist); renderHistory(); };
+$("pal").addEventListener("click", e => {
+  const b = e.target.closest("[data-pal]"); if (b) { cfg.pal = b.dataset.pal; applyCfg(); } });
+$("sw").addEventListener("input", e => { cfg.sw = +e.target.value; applyCfg(); });
+[["o-digits", "digits"], ["o-sep", "sep"], ["o-labels", "labels"], ["o-anim", "anim"]].forEach(([id, k]) =>
+  $(id).addEventListener("change", e => { cfg[k] = e.target.checked; applyCfg(); }));
+window.addEventListener("hashchange", () => show(location.hash.slice(1)));
+
+renderHistory(); applyCfg(); show(location.hash.slice(1) || "calcul");
 </script>
