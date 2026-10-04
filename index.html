@@ -1,0 +1,206 @@
+<title>Multiplication Japonaise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* Layout: contrôles en haut, grand schéma losange au centre, explication de l'étape en dessous */
+:root{
+  --bg:#f3f4f7; --panel:#ffffff; --fg:#161b2e; --muted:#5b6279; --line:#d9dce6;
+  --a:#27407f; --b:#c4721a; --dot:#0f1428; --ok:#1d7a55;
+  --display:"Shippori Mincho","Hiragino Mincho ProN",Georgia,serif;
+  --body:"Zen Kaku Gothic New","Hiragino Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e111c; --panel:#161a29; --fg:#e8eaf2; --muted:#9ba2ba; --line:#2a3048;
+  --a:#7f9cf0; --b:#f0a850; --dot:#f4f5fa; --ok:#5fd0a0; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e111c; --panel:#161a29; --fg:#e8eaf2; --muted:#9ba2ba; --line:#2a3048;
+  --a:#7f9cf0; --b:#f0a850; --dot:#f4f5fa; --ok:#5fd0a0; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);padding-inline:16px;padding-block:24px}
+.wrap{max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(26px,5vw,38px);margin:0;letter-spacing:.02em;text-wrap:balance}
+.sub{margin:4px 0 0;color:var(--muted);font-size:15px;max-width:60ch;line-height:1.5}
+.bar{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 16px}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+input{font:700 28px/1 var(--display);width:6.2ch;padding:10px 12px;border:2px solid var(--line);border-radius:6px;background:var(--panel);color:var(--fg);font-variant-numeric:tabular-nums}
+#ia{border-color:var(--a)} #ib{border-color:var(--b)}
+.times{font:800 28px var(--display);padding-bottom:10px;color:var(--muted)}
+button{font:500 15px var(--body);padding:11px 16px;border-radius:6px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
+button:hover{border-color:var(--muted)}
+button.primary{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+button:disabled{opacity:.4;cursor:default}
+:focus-visible{outline:3px solid var(--a);outline-offset:2px}
+.stage{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;overflow-x:auto}
+svg{display:block;width:100%;height:auto;max-height:70vh}
+.la{stroke:var(--a);stroke-width:4;stroke-linecap:round}
+.lb{stroke:var(--b);stroke-width:4;stroke-linecap:round}
+.dot{fill:var(--dot)}
+.sep{stroke:var(--line);stroke-width:2;stroke-dasharray:6 8}
+.t{font-family:var(--display);font-weight:800;fill:var(--fg);text-anchor:middle;font-variant-numeric:tabular-nums}
+.tl{font-family:var(--body);font-size:17px;fill:var(--muted);text-anchor:start}
+.ta{fill:var(--a)} .tb{fill:var(--b)}
+.res{fill:var(--ok)}
+.fade{animation:in .4s ease both}
+@keyframes in{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.fade{animation:none}}
+.foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 20px}
+.steps{display:flex;gap:8px;flex-wrap:wrap}
+.say{margin:0;flex:1 1 280px;min-width:0;line-height:1.55;font-size:15px}
+.eq{font:800 clamp(24px,5vw,34px) var(--display);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.eq .ea{color:var(--a)} .eq .eb{color:var(--b)} .eq .er{color:var(--ok)}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Multiplication japonaise</h1>
+    <p class="sub">Chaque chiffre devient des traits. Les traits se croisent, on compte les points par colonne, puis on reporte les retenues.</p>
+  </header>
+
+  <div class="bar">
+    <div class="field"><label for="ia">Premier nombre</label><input id="ia" inputmode="numeric" maxlength="4" value="123" autocomplete="off"></div>
+    <div class="times" aria-hidden="true">×</div>
+    <div class="field"><label for="ib">Second nombre</label><input id="ib" inputmode="numeric" maxlength="4" value="32" autocomplete="off"></div>
+    <button id="rnd" type="button">Au hasard</button>
+  </div>
+
+  <div class="stage"><svg id="svg" role="img" aria-label="Schéma de la multiplication japonaise"></svg></div>
+
+  <div class="foot">
+    <p class="say" id="say" aria-live="polite"></p>
+    <div class="steps">
+      <button id="prev" type="button">Précédent</button>
+      <button id="next" class="primary" type="button">Étape suivante</button>
+      <button id="all" type="button">Tout afficher</button>
+    </div>
+  </div>
+  <div class="eq" id="eq"></div>
+</div>
+
+<script>
+const S = 14, P = 18 * S, MAX_STEP = 4;
+const $ = id => document.getElementById(id);
+let step = MAX_STEP;
+
+const texts = [
+  "Traits : chaque chiffre donne autant de traits. Le premier nombre en bleu, le second en orange. Un zéro laisse un vide.",
+  "Intersections : chaque point est le croisement d'un trait bleu et d'un trait orange.",
+  "Colonnes : on compte les points de chaque colonne verticale. Chaque colonne est une position (unités, dizaines, centaines…).",
+  "Retenues : en partant de la droite, on ajoute la retenue au nombre de points. On garde le dernier chiffre et on reporte le reste à gauche.",
+  "Résultat : on lit les chiffres obtenus de gauche à droite."
+];
+
+function digits(el) {
+  const v = el.value.replace(/\D/g, "").slice(0, 4);
+  if (v !== el.value) el.value = v;
+  return v === "" ? null : v.split("").map(Number);
+}
+
+function compute(A, B) {
+  const na = A.length, nb = B.length, K = na + nb - 1;
+  const counts = Array(K).fill(0);
+  A.forEach((a, i) => B.forEach((b, j) => counts[i + j] += a * b));
+  const carryIn = Array(K).fill(0), digs = Array(K).fill(0);
+  let carry = 0;
+  for (let k = K - 1; k >= 0; k--) {
+    carryIn[k] = carry;
+    const t = counts[k] + carry;
+    digs[k] = t % 10; carry = Math.floor(t / 10);
+  }
+  const extra = []; // chiffres à gauche (colonnes -1, -2…)
+  while (carry > 0) { extra.push(carry % 10); carry = Math.floor(carry / 10); }
+  return { counts, carryIn, digs, extra, K };
+}
+
+function lineSet(n, digs) {
+  const out = [];
+  digs.forEach((d, g) => {
+    for (let t = 0; t < d; t++) out.push({ c: g * P + (t - (d - 1) / 2) * S, g });
+  });
+  return out;
+}
+
+function render() {
+  const A = digits($("ia")), B = digits($("ib"));
+  const svg = $("svg");
+  if (!A || !B) { svg.innerHTML = ""; $("say").textContent = "Entrez deux nombres.";
+    $("eq").textContent = ""; return; }
+  const na = A.length, nb = B.length, m = 2 * S;
+  const R = compute(A, B);
+  const la = lineSet(na, A), lb = lineSet(nb, B);
+  const caMin = -(4 * S) - 0, caMax = (na - 1) * P + 4 * S;
+  const cbMin = -(4 * S), cbMax = (nb - 1) * P + 4 * S;
+  const aLo = caMin - m, aHi = caMax + m, bLo = cbMin - m, bHi = cbMax + m;
+  const pt = (ca, cb) => [(ca + cb) / 2, (cb - ca) / 2];
+
+  const yMin = (bLo - aHi) / 2, yMax = (bHi - aLo) / 2;
+  const xMin = Math.min(-(R.extra.length) * P / 2 - P / 2, (aLo + bLo) / 2) - 120;
+  const xMax = (aHi + bHi) / 2 + 30;
+  const rowY = [yMax + 60, yMax + 115, yMax + 175];
+  const H = rowY[2] + 40, top = yMin - 60;
+  const W = xMax - xMin;
+  svg.setAttribute("viewBox", `${xMin} ${top} ${W} ${H - top}`);
+
+  let h = "";
+  // séparateurs de colonnes
+  if (step >= 2) for (let k = 0; k < R.K - 1; k++) {
+    const x = (k + 0.5) * P / 2;
+    h += `<line class="sep fade" x1="${x}" x2="${x}" y1="${yMin + 10}" y2="${rowY[2] + 20}"/>`;
+  }
+  // traits
+  la.forEach(l => { const [x1, y1] = pt(l.c, bLo), [x2, y2] = pt(l.c, bHi);
+    h += `<line class="la" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`; });
+  lb.forEach(l => { const [x1, y1] = pt(aLo, l.c), [x2, y2] = pt(aHi, l.c);
+    h += `<line class="lb" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`; });
+  // chiffres au bout des traits
+  A.forEach((d, i) => { const [x, y] = pt(i * P, bLo);
+    h += `<text class="t ta" font-size="30" x="${x - 18}" y="${y - 14}">${d}</text>`; });
+  B.forEach((d, j) => { const [x, y] = pt(aLo, j * P);
+    h += `<text class="t tb" font-size="30" x="${x - 22}" y="${y + 18}">${d}</text>`; });
+  // intersections
+  if (step >= 1) la.forEach(a => lb.forEach(b => {
+    const [x, y] = pt(a.c, b.c);
+    h += `<circle class="dot fade" cx="${x}" cy="${y}" r="5.5"/>`; }));
+  // lignes de lecture
+  const labels = ["points", "+ retenue", "chiffre"];
+  if (step >= 2) labels.forEach((t, r) => {
+    if (r === 1 && step < 3) return; if (r === 2 && step < 3) return;
+    h += `<text class="tl" x="${xMin + 8}" y="${rowY[r] + 6}">${t}</text>`; });
+  for (let k = 0; k < R.K; k++) {
+    const x = k * P / 2;
+    if (step >= 2) h += `<text class="t fade" font-size="34" x="${x}" y="${rowY[0]}">${R.counts[k]}</text>`;
+    if (step >= 3) {
+      h += `<text class="t fade" font-size="26" x="${x}" y="${rowY[1]}" style="fill:var(--muted)">${R.carryIn[k] ? "+" + R.carryIn[k] : "·"}</text>`;
+      h += `<text class="t fade" font-size="40" x="${x}" y="${rowY[2]}">${R.digs[k]}</text>`;
+    }
+  }
+  if (step >= 3) R.extra.forEach((d, e) => {
+    const x = -(e + 1) * P / 2;
+    h += `<text class="t fade" font-size="40" x="${x}" y="${rowY[2]}">${d}</text>`; });
+  svg.innerHTML = h;
+  if (step >= 4) svg.querySelectorAll("text.t.fade").forEach(t => {
+    if (+t.getAttribute("y") === rowY[2]) t.classList.add("res"); });
+
+  const prod = (BigInt($("ia").value) * BigInt($("ib").value)).toString();
+  const built = R.extra.slice().reverse().join("") + R.digs.join("");
+  const ok = String(BigInt(built)) === prod;
+  $("say").textContent = texts[step] + (step === 4 && !ok ? " (écart de calcul)" : "");
+  $("eq").innerHTML = `<span class="ea">${$("ia").value}</span> × <span class="eb">${$("ib").value}</span>` +
+    (step >= 4 ? ` = <span class="er">${prod}</span>` : "");
+  $("prev").disabled = step === 0;
+  $("next").disabled = step === MAX_STEP;
+}
+
+const reset = () => { step = 0; render(); };
+$("ia").addEventListener("input", reset);
+$("ib").addEventListener("input", reset);
+$("prev").onclick = () => { step = Math.max(0, step - 1); render(); };
+$("next").onclick = () => { step = Math.min(MAX_STEP, step + 1); render(); };
+$("all").onclick = () => { step = MAX_STEP; render(); };
+$("rnd").onclick = () => {
+  const r = n => String(Math.floor(Math.random() * (10 ** n - 10 ** (n - 1))) + 10 ** (n - 1));
+  $("ia").value = r(2 + Math.floor(Math.random() * 2));
+  $("ib").value = r(2);
+  reset();
+};
+render();
+</script>
